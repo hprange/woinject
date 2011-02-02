@@ -5,7 +5,7 @@
     <artifactId>woinject</artifactId>
     <version>0.1-SNAPSHOT</version>
     <name>WOInject Framework</name>
-    <description>WOInject is framework to enable dependency injection into WebObjects applications.</description>
+    <description>WOInject is a framework to enable dependency injection into WebObjects applications.</description>
     <url>http://github.com/hprange/woinject</url>
     <inceptionYear>2010</inceptionYear>
 
