@@ -35,7 +35,7 @@ import com.webobjects.eocontrol.EOEnterpriseObject;
 public abstract class Runner {
     private static Injector injector;
 
-    private static Injector injector() {
+    public static Injector injector() {
 	if (injector == null) {
 	    injector = Guice.createInjector(new WOInjectModule());
 	}
@@ -72,10 +72,12 @@ public abstract class Runner {
 	CtMethod m = cc.getDeclaredMethod("instantiateObject");
 
 	m.insertBefore("{ Object result = com.woinject.Runner.intercept($1, $2); if(result!=null) return result; }");
+	m.insertAfter("{ com.woinject.Runner.injector().injectMembers($_); }");
 
 	m = cc.getDeclaredMethod("instantiateObjectWithConstructor");
 
-	m.insertBefore("{ Object result = com.woinject.Runner.intercept($2, $3); if(result!=null) return result; }");
+	m.insertBefore("{ Object result = com.woinject.Runner#intercept($2, $3); if(result!=null) return result; }");
+	m.insertAfter("{ com.woinject.Runner.injector().injectMembers($_); }");
 
 	Thread.currentThread().setContextClassLoader(cl);
 
