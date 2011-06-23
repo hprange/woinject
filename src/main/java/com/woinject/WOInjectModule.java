@@ -29,7 +29,7 @@ public class WOInjectModule extends AbstractModule {
     protected void configure() {
 	bindScope(WOSessionScoped.class, new WOSessionScope());
 
-	// TODO: Remove. It's just here just to help debugging.
+	// TODO: Remove. It's here just to help debugging.
 	bind(String.class).annotatedWith(Names.named("test")).toInstance("yes");
     }
 }
