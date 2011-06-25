@@ -1,20 +1,21 @@
 package com.woinject;
 
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 /**
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
  */
 public class Interceptor {
-    private static Injector injector;
+    public static Object injectMembers(Object object) {
+	Injector injector = InjectableApplication.application().injector();
 
-    public static Injector injector() {
 	if (injector == null) {
-	    injector = Guice.createInjector(new WOInjectModule());
+	    return object;
 	}
 
-	return injector;
+	injector.injectMembers(object);
+
+	return object;
     }
 
     // public static Object intercept(Class<?> clazz, Object[] parameters) {

@@ -46,18 +46,26 @@ public class WOInject {
 	    CtMethod m = cc.getDeclaredMethod("instantiateObject");
 
 	    // m.insertBefore("{ Object result = com.woinject.Interceptor.intercept($1, $2); if(result!=null) return result; }");
-	    m.insertAfter("{ com.woinject.Interceptor.injector().injectMembers($_); }");
+	    m.insertAfter("{ com.woinject.Interceptor.injectMembers($_); }");
 
 	    m = cc.getDeclaredMethod("instantiateObjectWithConstructor");
 
 	    // m.insertBefore("{ Object result = com.woinject.Interceptor#intercept($2, $3); if(result!=null) return result; }");
-	    m.insertAfter("{ com.woinject.Interceptor.injector().injectMembers($_); }");
+	    m.insertAfter("{ com.woinject.Interceptor.injectMembers($_); }");
 
 	    Thread.currentThread().setContextClassLoader(cl);
 
-	    Class<?> c = cl.loadClass("er.extensions.appserver.ERXApplication");
+	    Class<?> erxApplication = cl.loadClass("er.extensions.appserver.ERXApplication");
 
-	    c.getDeclaredMethod("main", String[].class, Class.class).invoke(null, args, cl.loadClass(applicationClass));
+	    Class<?> appClass = cl.loadClass(applicationClass);
+
+	    Class<?> injectableAppClass = cl.loadClass("com.woinject.InjectableApplication");
+
+	    if (!injectableAppClass.isAssignableFrom(appClass)) {
+		throw new RuntimeException("Cannot initialize the injector. The Application class doesn't extend InjectableApplication.");
+	    }
+
+	    erxApplication.getDeclaredMethod("main", String[].class, Class.class).invoke(null, args, appClass);
 	} catch (Throwable exception) {
 	    throw new RuntimeException("Cannot initialize the application to take advantage of WOInject features.", exception);
 	}
