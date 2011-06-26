@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2010 hprange <hprange@gmail.com>
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -24,22 +24,19 @@ import er.extensions.appserver.ERXSession;
  * @since 1.0
  */
 @SuppressWarnings("serial")
-public class InjectableSession extends ERXSession
-{
-	public InjectableSession()
-	{
-		this(null);
-	}
+@Deprecated
+public class InjectableSession extends ERXSession {
+    public InjectableSession() {
+	this(null);
+    }
 
-	public InjectableSession(String sessionID)
-	{
-		super(sessionID);
+    public InjectableSession(String sessionID) {
+	super(sessionID);
 
-		injector().injectMembers(this);
-	}
+	injector().injectMembers(this);
+    }
 
-	private Injector injector()
-	{
-		return InjectableApplication.application().injector();
-	}
+    private Injector injector() {
+	return InjectableApplication.application().injector();
+    }
 }
