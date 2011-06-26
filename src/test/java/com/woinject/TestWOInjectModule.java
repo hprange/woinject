@@ -1,0 +1,57 @@
+/**
+ * Copyright (C) 2010 hprange <hprange@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package com.woinject;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.lang.annotation.Annotation;
+import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Scope;
+
+/**
+ * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
+ */
+public class TestWOInjectModule {
+    private Map<Class<? extends Annotation>, Scope> scopes;
+
+    @Test
+    public void bindWORequestScope() throws Exception {
+	Scope scope = scopes.get(WORequestScoped.class);
+
+	assertThat(scope == WOScopes.REQUEST, is(true));
+    }
+
+    @Test
+    public void bindWOSessionScope() throws Exception {
+	Scope scope = scopes.get(WOSessionScoped.class);
+
+	assertThat(scope == WOScopes.SESSION, is(true));
+    }
+
+    @Before
+    public void setup() {
+	Injector injector = Guice.createInjector(new WOInjectModule());
+
+	scopes = injector.getScopeBindings();
+    }
+}

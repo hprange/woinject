@@ -17,19 +17,15 @@
 package com.woinject;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.name.Names;
 
 /**
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
  * @since 1.0
  */
 public class WOInjectModule extends AbstractModule {
-
     @Override
     protected void configure() {
-	bindScope(WOSessionScoped.class, new WOSessionScope());
-
-	// TODO: Remove. It's here just to help debugging.
-	bind(String.class).annotatedWith(Names.named("test")).toInstance("yes");
+	bindScope(WORequestScoped.class, WOScopes.REQUEST);
+	bindScope(WOSessionScoped.class, WOScopes.SESSION);
     }
 }
