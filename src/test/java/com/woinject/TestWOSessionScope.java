@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2010 hprange <hprange@gmail.com>
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -22,9 +22,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -40,104 +38,80 @@ import com.webobjects.foundation.NSKeyValueCoding;
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TestWOSessionScope
-{
-	private static final String KEY_NAME = "Key[type=java.lang.Object, annotation=[none]]";
+public class TestWOSessionScope extends AbstractScopeTestCase<WOSessionScope> {
+    @Mock
+    protected WOSession mockSession;
 
-	@Mock
-	protected Provider<Object> mockCreator;
+    @Test
+    public void createAndSaveObjectOnFirstCall() throws Exception {
+	Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-	protected Key<Object> mockKey;
+	assertThat(result.get(), is(mockObject));
 
-	@Mock
-	protected Object mockObject;
+	Mockito.verify(mockCreator).get();
+	Mockito.verify(mockSession).setObjectForKey(mockObject, KEY_NAME);
+    }
 
-	@Mock
-	protected WOSession mockSession;
+    @Test
+    public void exceptionIfSessionIsNotAvailable() throws Exception {
+	doReturn(null).when(scope).session();
 
-	protected WOSessionScope scope;
+	Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
+	thrown.expect(OutOfScopeException.class);
+	thrown.expectMessage(is("Cannot access scoped object. Either the session has not been initialized yet, or it has expired."));
 
-	@Test
-	public void createAndSaveObjectOnFirstCall() throws Exception
-	{
-		Provider<Object> result = scope.scope(mockKey, mockCreator);
+	result.get();
+    }
 
-		assertThat(result.get(), is(mockObject));
+    @Test
+    public void retrieveTheSameObjectOnSubsequentCalls() throws Exception {
+	for (int i = 0; i < 10; i++) {
+	    Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-		Mockito.verify(mockCreator).get();
-		Mockito.verify(mockSession).setObjectForKey(mockObject, KEY_NAME);
+	    assertThat(result.get(), is(mockObject));
 	}
 
-	@Test
-	public void exceptionIfSessionIsNotAvailable() throws Exception
-	{
-		doReturn(null).when(scope).session();
+	Mockito.verify(mockCreator, Mockito.times(1)).get();
+	Mockito.verify(mockSession, Mockito.times(1)).setObjectForKey(mockObject, KEY_NAME);
+    }
 
-		Provider<Object> result = scope.scope(mockKey, mockCreator);
+    @Test
+    public void returnNullOnSubsequentCalls() throws Exception {
+	Mockito.when(mockSession.objectForKey(KEY_NAME)).thenReturn(null, NSKeyValueCoding.NullValue);
+	Mockito.when(mockCreator.get()).thenReturn(null);
 
-		thrown.expect(OutOfScopeException.class);
-		thrown.expectMessage(is("Cannot access scoped object. Either the Session has not been initialized yet or it has expired."));
+	for (int i = 0; i < 10; i++) {
+	    Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-		result.get();
+	    assertThat(result.get(), nullValue());
 	}
 
-	@Test
-	public void retrieveTheSameObjectOnSubsequentCalls() throws Exception
-	{
-		for(int i = 0; i < 10; i++)
-		{
-			Provider<Object> result = scope.scope(mockKey, mockCreator);
+	Mockito.verify(mockCreator, Mockito.times(1)).get();
+	Mockito.verify(mockSession, Mockito.times(1)).setObjectForKey(NSKeyValueCoding.NullValue, KEY_NAME);
+    }
 
-			assertThat(result.get(), is(mockObject));
-		}
+    @Test
+    public void setNullValueIfProvidesReturnsNull() throws Exception {
+	Mockito.when(mockCreator.get()).thenReturn(null);
 
-		Mockito.verify(mockCreator, Mockito.times(1)).get();
-		Mockito.verify(mockSession, Mockito.times(1)).setObjectForKey(mockObject, KEY_NAME);
-	}
+	Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-	@Test
-	public void returnNullOnSubsequentCalls() throws Exception
-	{
-		Mockito.when(mockSession.objectForKey(KEY_NAME)).thenReturn(null, NSKeyValueCoding.NullValue);
-		Mockito.when(mockCreator.get()).thenReturn(null);
+	assertThat(result.get(), nullValue());
 
-		for(int i = 0; i < 10; i++)
-		{
-			Provider<Object> result = scope.scope(mockKey, mockCreator);
+	Mockito.verify(mockSession).setObjectForKey(NSKeyValueCoding.NullValue, KEY_NAME);
+    }
 
-			assertThat(result.get(), nullValue());
-		}
+    @Before
+    public void setup() {
+	scope = Mockito.spy(new WOSessionScope());
 
-		Mockito.verify(mockCreator, Mockito.times(1)).get();
-		Mockito.verify(mockSession, Mockito.times(1)).setObjectForKey(NSKeyValueCoding.NullValue, KEY_NAME);
-	}
+	Mockito.doReturn(mockSession).when(scope).session();
 
-	@Test
-	public void setNullValueIfProvidesReturnsNull() throws Exception
-	{
-		Mockito.when(mockCreator.get()).thenReturn(null);
+	mockKey = Key.get(Object.class);
 
-		Provider<Object> result = scope.scope(mockKey, mockCreator);
+	Mockito.when(mockSession.objectForKey(KEY_NAME)).thenReturn(null, mockObject);
 
-		assertThat(result.get(), nullValue());
-
-		Mockito.verify(mockSession).setObjectForKey(NSKeyValueCoding.NullValue, KEY_NAME);
-	}
-
-	@Before
-	public void setup()
-	{
-		scope = Mockito.spy(new WOSessionScope());
-
-		Mockito.doReturn(mockSession).when(scope).session();
-
-		mockKey = Key.get(Object.class);
-
-		Mockito.when(mockSession.objectForKey(KEY_NAME)).thenReturn(null, mockObject);
-
-		Mockito.when(mockCreator.get()).thenReturn(mockObject);
-	}
+	Mockito.when(mockCreator.get()).thenReturn(mockObject);
+    }
 }

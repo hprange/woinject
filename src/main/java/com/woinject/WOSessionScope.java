@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2010 hprange <hprange@gmail.com>
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,55 +31,50 @@ import er.extensions.appserver.ERXSession;
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
  * @since 1.0
  */
-class WOSessionScope implements Scope
-{
-	/*
-	 * (non-Javadoc)
-	 * @see com.google.inject.Scope#scope(com.google.inject.Key,
-	 * com.google.inject.Provider)
-	 */
-	public <T> Provider<T> scope(final Key<T> key, final Provider<T> creator)
-	{
-		final String name = key.toString();
+class WOSessionScope implements Scope {
+    WOSessionScope() {
+    }
 
-		return new Provider<T>()
-		{
-			public T get()
-			{
-				WOSession session = session();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.inject.Scope#scope(com.google.inject.Key,
+     * com.google.inject.Provider)
+     */
+    public <T> Provider<T> scope(final Key<T> key, final Provider<T> creator) {
+	final String name = key.toString();
 
-				if(session == null)
-				{
-					throw new OutOfScopeException("Cannot access scoped object. Either the Session has not been initialized yet or it has expired.");
-				}
+	return new Provider<T>() {
+	    public T get() {
+		WOSession session = session();
 
-				synchronized(session)
-				{
-					Object object = session.objectForKey(name);
+		if (session == null) {
+		    throw new OutOfScopeException("Cannot access scoped object. Either the session has not been initialized yet, or it has expired.");
+		}
 
-					if(object == NSKeyValueCoding.NullValue)
-					{
-						return null;
-					}
+		synchronized (session) {
+		    Object object = session.objectForKey(name);
 
-					@SuppressWarnings("unchecked")
-					T t = (T) object;
+		    if (object == NSKeyValueCoding.NullValue) {
+			return null;
+		    }
 
-					if(t == null)
-					{
-						t = creator.get();
+		    @SuppressWarnings("unchecked")
+		    T t = (T) object;
 
-						session.setObjectForKey(t != null ? t : NSKeyValueCoding.NullValue, name);
-					}
+		    if (t == null) {
+			t = creator.get();
 
-					return t;
-				}
-			}
-		};
-	}
+			session.setObjectForKey(t != null ? t : NSKeyValueCoding.NullValue, name);
+		    }
 
-	protected WOSession session()
-	{
-		return ERXSession.session();
-	}
+		    return t;
+		}
+	    }
+	};
+    }
+
+    protected WOSession session() {
+	return ERXSession.session();
+    }
 }
