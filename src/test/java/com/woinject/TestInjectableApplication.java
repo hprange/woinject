@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2010 hprange <hprange@gmail.com>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -19,15 +19,12 @@ package com.woinject;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import javassist.CannotCompileException;
-import javassist.NotFoundException;
 
 import org.junit.After;
 import org.junit.Test;
 
 import com.google.inject.Injector;
 import com.google.inject.Stage;
-import com.webobjects.foundation._NSUtilities;
 
 import er.extensions.foundation.ERXProperties;
 
@@ -36,13 +33,6 @@ import er.extensions.foundation.ERXProperties;
  */
 public class TestInjectableApplication extends AbstractInjectableTestCase {
     private static final String DEVELOPMENT_MODE_KEY = "er.extensions.ERXApplication.developmentMode";
-
-    @Test
-    public void aaaa() throws NotFoundException, CannotCompileException {
-	Object result = _NSUtilities.instantiateObject(Stage.class, null, null, false, false);
-
-	System.out.println(result);
-    }
 
     @Test
     public void appendAndLoadStubModuleOnInjectorInitialization() throws Exception {
