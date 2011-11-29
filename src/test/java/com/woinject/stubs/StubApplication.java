@@ -14,13 +14,15 @@
  * the License.
  */
 
-package com.woinject;
+package com.woinject.stubs;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
+import com.woinject.InjectableApplication;
 
 /**
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
@@ -44,6 +46,8 @@ public class StubApplication extends InjectableApplication {
 
     private String injectableMethod;
 
+    private boolean nullInjector = false;
+
     private StubModule stubModule;
 
     public String getInjectableField() {
@@ -60,10 +64,23 @@ public class StubApplication extends InjectableApplication {
     }
 
     @Override
+    public Injector injector() {
+	if (nullInjector) {
+	    return null;
+	}
+
+	return super.injector();
+    }
+
+    @Override
     protected Module[] injectorModules() {
 	stubModule = new StubModule();
 
 	return new Module[] { stubModule };
+    }
+
+    public void setReturnNullInjector(boolean nullInjector) {
+	this.nullInjector = nullInjector;
     }
 
     public boolean stubModuleWasLoaded() {

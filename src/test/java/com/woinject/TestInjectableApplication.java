@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import com.google.inject.Injector;
 import com.google.inject.Stage;
+import com.woinject.stubs.StubApplication;
 
 import er.extensions.foundation.ERXProperties;
 

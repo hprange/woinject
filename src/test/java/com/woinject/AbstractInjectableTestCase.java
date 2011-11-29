@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 
 import com.webobjects.foundation.NSBundle;
+import com.woinject.stubs.StubApplication;
 
 /**
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
@@ -51,10 +52,10 @@ public abstract class AbstractInjectableTestCase {
 	NSBundle._setMainBundle(mockBundle);
     }
 
-    protected InjectableApplication application;
+    protected StubApplication application;
 
     @Before
-    public void setup() {
+    public void setup() throws Exception {
 	application = new StubApplication();
     }
 
