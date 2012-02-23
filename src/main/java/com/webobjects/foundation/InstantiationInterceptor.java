@@ -15,6 +15,13 @@
  */
 package com.webobjects.foundation;
 
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
 
 import org.slf4j.Logger;
@@ -23,7 +30,9 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Binder;
 import com.google.inject.Binding;
+import com.google.inject.BindingAnnotation;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
@@ -40,6 +49,16 @@ import com.woinject.WOInjectException;
  * @since 1.0
  */
 class InstantiationInterceptor {
+    /**
+     * @author <a href="mailto:hprange@gmail.com.br">Henrique Prange</a>
+     * @since 1.0
+     */
+    @BindingAnnotation
+    @Target({ FIELD, PARAMETER, METHOD })
+    @Retention(RUNTIME)
+    private @interface WOInjectBinding {
+    }
+
     private static final Logger LOGGER = LoggerFactory.getLogger(InstantiationInterceptor.class);
 
     private static <T> Constructor<T> findConstructor(final Class<T> type, final Class<?>[] parameterTypes, boolean shouldThrow, boolean shouldLog) {
@@ -111,14 +130,14 @@ class InstantiationInterceptor {
 		    }
 		}
 
-		binder.bind(type).toConstructor(constructor).in(Scopes.NO_SCOPE);
+		binder.bind(Key.get(type, WOInjectBinding.class)).toConstructor(constructor).in(Scopes.NO_SCOPE);
 	    }
 	};
 
 	try {
 	    Injector forCreate = injector.createChildInjector(assistedModule);
 
-	    Binding<T> binding = forCreate.getBinding(type);
+	    Binding<T> binding = forCreate.getBinding(Key.get(type, WOInjectBinding.class));
 
 	    return binding.getProvider().get();
 	} catch (Exception exception) {

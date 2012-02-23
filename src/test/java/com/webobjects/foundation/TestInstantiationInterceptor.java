@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2010 hprange <hprange@gmail.com>
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,6 +20,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.internal.util.MockUtil;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.inject.AbstractModule;
@@ -55,7 +57,7 @@ import com.woinject.stubs.StubSession;
  * @author <a href="mailto:hprange@gmail.com.br">Henrique Prange</a>
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TestIntantiationInterceptor extends AbstractInjectableTestCase {
+public class TestInstantiationInterceptor extends AbstractInjectableTestCase {
     private static class StubInterceptor implements MethodInterceptor {
 	int invocations = 0;
 
@@ -80,8 +82,14 @@ public class TestIntantiationInterceptor extends AbstractInjectableTestCase {
 	@Override
 	protected void configure() {
 	    bind(String.class).annotatedWith(Names.named("test")).toInstance("expectedText");
+	    bind(StubObjectForBinding.class).toInstance(mock(StubObjectForBinding.class));
 
 	    bindInterceptor(Matchers.any(), Matchers.any(), interceptor);
+	}
+    }
+
+    static class StubObjectForBinding {
+	public StubObjectForBinding() {
 	}
     }
 
@@ -265,5 +273,12 @@ public class TestIntantiationInterceptor extends AbstractInjectableTestCase {
 	thrown.expectMessage(is("The instantiation of com.woinject.stubs.StubObject class has failed."));
 
 	InstantiationInterceptor.instantiateObject(StubObject.class, null, null, true, false);
+    }
+
+    @Test
+    public void useSpecialKeyToAvoidBindingConflictsWithParentInjector() throws Exception {
+	StubObjectForBinding result = InstantiationInterceptor.instantiateObject(StubObjectForBinding.class, null, null, false, false);
+
+	assertThat(new MockUtil().isMock(result), is(false));
     }
 }
