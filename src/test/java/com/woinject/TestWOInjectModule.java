@@ -17,6 +17,7 @@ package com.woinject;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
@@ -26,13 +27,43 @@ import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.Scope;
+import com.webobjects.appserver.WOContext;
+import com.webobjects.appserver.WOSession;
+
+import er.extensions.appserver.ERXSession;
+import er.extensions.appserver.ERXWOContext;
 
 /**
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
  */
 public class TestWOInjectModule {
+    private Injector injector;
+
     private Map<Class<? extends Annotation>, Scope> scopes;
+
+    @Test
+    public void bindCurrentContextProvider() throws Exception {
+	WOContext mockContext = mock(WOContext.class);
+
+	ERXWOContext.setCurrentContext(mockContext);
+
+	WOContext result = injector.getInstance(Key.get(WOContext.class, Current.class));
+
+	assertThat(result, is(mockContext));
+    }
+
+    @Test
+    public void bindCurrentSessionProvider() throws Exception {
+	ERXSession mockSession = mock(ERXSession.class);
+
+	ERXSession.setSession(mockSession);
+
+	WOSession result = injector.getInstance(Key.get(WOSession.class, Current.class));
+
+	assertThat(result, is((WOSession) mockSession));
+    }
 
     @Test
     public void bindWORequestScope() throws Exception {
@@ -50,7 +81,7 @@ public class TestWOInjectModule {
 
     @Before
     public void setup() {
-	Injector injector = Guice.createInjector(new WOInjectModule());
+	injector = Guice.createInjector(new WOInjectModule());
 
 	scopes = injector.getScopeBindings();
     }

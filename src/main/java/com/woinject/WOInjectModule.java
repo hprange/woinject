@@ -17,6 +17,12 @@
 package com.woinject;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.webobjects.appserver.WOContext;
+import com.webobjects.appserver.WOSession;
+
+import er.extensions.appserver.ERXSession;
+import er.extensions.appserver.ERXWOContext;
 
 /**
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
@@ -27,5 +33,17 @@ public class WOInjectModule extends AbstractModule {
     protected void configure() {
 	bindScope(WORequestScoped.class, WOScopes.REQUEST);
 	bindScope(WOSessionScoped.class, WOScopes.SESSION);
+    }
+
+    @Current
+    @Provides
+    public WOContext provideContext() {
+	return ERXWOContext.currentContext();
+    }
+
+    @Current
+    @Provides
+    public WOSession provideSession() {
+	return ERXSession.session();
     }
 }
