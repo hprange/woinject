@@ -71,7 +71,9 @@
 					<excludes>
 						<exclude>LICENSE.txt</exclude>
 						<exclude>build.*</exclude>
-						<exclude>src/test/resources/**</exclude>
+						<exclude>README.md</exclude>
+						<exclude>.gitignore</exclude>
+						<exclude>.maven/**</exclude>
 					</excludes>
 					<properties>
 						<year>${project.inceptionYear}</year>
