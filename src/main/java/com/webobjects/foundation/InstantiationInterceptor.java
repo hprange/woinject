@@ -112,7 +112,7 @@ class InstantiationInterceptor {
 	    return object;
 	}
 
-	Module assistedModule = new AbstractModule() {
+	Module woinjectModule = new AbstractModule() {
 	    @Override
 	    @SuppressWarnings({ "rawtypes", "unchecked" })
 	    protected void configure() {
@@ -131,7 +131,7 @@ class InstantiationInterceptor {
 	};
 
 	try {
-	    Injector forCreate = injector.createChildInjector(assistedModule);
+	    Injector forCreate = injector.createChildInjector(woinjectModule);
 
 	    Binding<T> binding = forCreate.getBinding(Key.get(type, WOInjectBinding.class));
 
