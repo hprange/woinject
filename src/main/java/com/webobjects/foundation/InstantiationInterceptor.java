@@ -78,10 +78,6 @@ class InstantiationInterceptor {
 	    return null;
 	}
 
-	if (exception instanceof WOInjectException) {
-	    throw (WOInjectException) exception;
-	}
-
 	throw new WOInjectException("The instantiation of " + type.getName() + " class has failed.", exception);
     }
 
