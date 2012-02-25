@@ -10,6 +10,10 @@
 	<url>http://github.com/hprange/woinject</url>
 	<inceptionYear>2010</inceptionYear>
 
+	<prerequisites>
+		<maven>2.2.0</maven>
+	</prerequisites>
+
 	<issueManagement>
 		<system>GitHub</system>
 		<url>http://github.com/hprange/woinject/issues</url>
