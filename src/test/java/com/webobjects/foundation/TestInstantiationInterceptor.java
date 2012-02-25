@@ -237,8 +237,8 @@ public class TestInstantiationInterceptor extends AbstractInjectableTestCase {
 
 	application = new StubApplication() {
 	    @Override
-	    protected Module[] injectorModules() {
-		List<Module> modules = new ArrayList<Module>(Arrays.asList(super.injectorModules()));
+	    protected Module[] modules() {
+		List<Module> modules = new ArrayList<Module>(Arrays.asList(super.modules()));
 
 		modules.add(new StubModule(interceptor));
 

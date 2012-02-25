@@ -73,7 +73,7 @@ public class StubApplication extends InjectableApplication {
     }
 
     @Override
-    protected Module[] injectorModules() {
+    protected Module[] modules() {
 	stubModule = new StubModule();
 
 	return new Module[] { stubModule };

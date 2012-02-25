@@ -61,7 +61,7 @@ public abstract class InjectableApplication extends ERXApplication {
      * <p>
      * The <code>WOInjectModule</code> is loaded by default in addition to all
      * the <code>Module</code>s returned by the
-     * {@link InjectableApplication#injectorModules()} method.
+     * {@link InjectableApplication#modules()} method.
      * <p>
      * Override this method to create your own injector.
      * 
@@ -74,9 +74,9 @@ public abstract class InjectableApplication extends ERXApplication {
 	List<Module> modules = new ArrayList<Module>();
 
 	modules.add(new WOInjectModule());
-	modules.addAll(Arrays.asList(injectorModules()));
+	modules.addAll(Arrays.asList(modules()));
 
-	return Guice.createInjector(injectorStage(), modules);
+	return Guice.createInjector(stage(), modules);
     }
 
     /**
@@ -98,7 +98,7 @@ public abstract class InjectableApplication extends ERXApplication {
      * @see InjectableApplication#createInjector()
      * @see Module
      */
-    protected Module[] injectorModules() {
+    protected Module[] modules() {
 	return new Module[] {};
     }
 
@@ -111,7 +111,7 @@ public abstract class InjectableApplication extends ERXApplication {
      * @return
      * @see Stage
      */
-    protected Stage injectorStage() {
+    protected Stage stage() {
 	return isDevelopmentMode() ? Stage.DEVELOPMENT : Stage.PRODUCTION;
     }
 }
