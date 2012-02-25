@@ -4,7 +4,7 @@ WOInject
 WOInject is a dependency injection framework for WebObjects. It extends
 the powerful Google Guice framework and adds capabilities specific for
 WO applications. Dependency injection is a useful technique for program
-modularization leading to more testable code. WOInject allows you to write
+modularization leading to more testable code. WOInject allows to write
 better APIs and decoupled code reducing the hurdle of wiring things
 together.
 
