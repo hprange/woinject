@@ -60,12 +60,12 @@ public class WOInject {
 	    Class<?> injectableAppClass = cl.loadClass("com.woinject.InjectableApplication");
 
 	    if (!injectableAppClass.isAssignableFrom(appClass)) {
-		throw new RuntimeException("Cannot initialize the injector. The Application class doesn't extend InjectableApplication.");
+		throw new Error("Cannot initialize the injector. The Application class doesn't extend InjectableApplication.");
 	    }
 
 	    erxApplication.getDeclaredMethod("main", String[].class, Class.class).invoke(null, args, appClass);
 	} catch (Throwable exception) {
-	    throw new RuntimeException("Cannot initialize the application to take advantage of WOInject features.", exception);
+	    throw new Error("Cannot initialize the application to take advantage of WOInject features.", exception);
 	}
     }
 }
