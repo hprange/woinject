@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>woinject - Test framework for WebObjects</title>
+		<script type="text/javascript" src="js/shCore.js"></script>
+		<script type="text/javascript" src="js/all-min.js"></script>
+		<link href="css/all-min.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-22475266-2']);
+			_gaq.push(['_trackPageview']);
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+	</head>
+	<body>
+		<a href="http://github.com/hprange/woinject"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+		<div id="container">
+			<div class="download">
+				<a href="http://github.com/hprange/woinject/zipball/woinject-1.0-SNAPSHOT">
+					<img border="0" width="90" src="images/zip.png" alt="" /></a>
+				<a href="https://github.com/downloads/hprange/woinject/woinject-1.0-SNAPSHOT.jar">
+					<img border="0" width="90" src="images/jar.png" alt="" /></a>
+			</div>
+			<h1><a href="index.html"><img border="0" src="images/woinject.png" alt="" /></a></h1>
+			<div class="description">
+				WOInject is a dependency injection framework for WebObjects. It extends the powerful Google Guice framework and adds capabilities specific for WO applications. Dependency injection is a useful technique for program modularization leading to more testable code. WOInject allows to write better APIs and decoupled code reducing the hurdle of wiring things together.
+			</div>
+			<h2>Features</h2>
+			<p>
+				<ul>
+					<li><strong>Minimal configuration</strong>: initialize your application using the WOInject classes and the application is ready for dependency injection. No configuration of VM agents, XML or properties is required.</li>
+					<li><strong>Deep integration</strong>: delegate the creation of objects like components, enterprise objects, sessions and direct actions to Guice. Take advantage of dependency injection and AOP support without inheriting any special classes.</li>
+					<li><strong>Special scopes</strong>: provide scopes to inject objects per session (@WOSessionScoped) or request (@WORequestScoped).</li>	
+					<li><strong>Type safe</strong>: make use of Java 5 features and Guice approach to provide type safe binding configuration.</li>
+				</ul>
+			</p>
+			<h2>Usage</h2>
+			<p>
+				<pre class="brush: java; toolbar: false; gutter: false;">
+package my.app;
+
+import com.google.inject.Module;
+import com.woinject.InjectableApplication;
+import com.woinject.WOInject;
+
+public class Application extends InjectableApplication {
+    public static void main(String[] args) {
+        WOInject.main(args, "my.app.Application");
+    }
+
+    @Override
+    protected Module[] modules() {
+        return new Module[] { new MyModule() };
+    }
+}</pre>
+			</p>
+			<p>See the <a href="usage.html">Complete Guide</a> for more details about the WOInject usage.</p>
+			<p>The <a href="apidocs/index.html">Javadoc API</a> documents are available online.</p>
+			<h2>Dependencies</h2>
+			<p>
+				<ul>
+					<li>Guice 3.0</li>
+					<li>Project Wonder 5</li>
+					<li>WebObjects 5</li>
+				</ul>
+			</p>
+			<h2>Install</h2>
+			<p>Maven users have to add the dependency declaration:
+				<pre class="brush: xml; toolbar: false; gutter: false;">
+&lt;dependency&gt;
+	&lt;groupid&gt;com.woinject&lt;/groupid&gt;
+	&lt;artifactid&gt;woinject&lt;/artifactid&gt;
+	&lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+				Non Maven users have to:
+				<ol>
+					<li>Download the <a href="https://github.com/downloads/hprange/woinject/woinject-1.0-SNAPSHOT.jar">woinject.jar</a>.</li>
+					<li>Add the woinject library to the build path.</li>
+				</ol>
+			</p>
+			<h2>Download</h2>
+			<p>
+				You can download this project in either
+				<a href="http://github.com/hprange/woinject/zipball/woinject-1.0-SNAPSHOT">zip</a> or
+				<a href="https://github.com/downloads/hprange/woinject/woinject-1.0-SNAPSHOT.jar">jar</a> formats.
+			</p>
+			<p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+				by running:
+				<pre class="brush: bash; toolbar: false; gutter: false;">
+$ git clone git://github.com/hprange/woinject</pre>
+			</p>
+			<h2>License</h2>
+			<p>WOInject is free software released under the Apache 2 license.</p>
+			<h2>Author</h2>
+			<p>Henrique Prange (hprange at gmail.com)</p>
+			<h2>Contributors</h2>
+			<p>Sébastien Letélie</p>
+			<div class="footer">
+				get the source code on GitHub : <a href="http://github.com/hprange/woinject">hprange/woinject</a>
+			</div>
+		</div>
+		<script type="text/javascript">
+			SyntaxHighlighter.all();
+		</script>
+	</body>
+</html>
