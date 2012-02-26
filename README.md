@@ -51,7 +51,7 @@ Non Maven users have to:
 Usage
 -----
 
-	package my.package;
+	package my.app;
 
 	import com.google.inject.Module;
 	import com.woinject.InjectableApplication;
@@ -59,7 +59,7 @@ Usage
 
 	public class Application extends InjectableApplication {
 		public static void main(String[] args) {
-			WOInject.main(args, "my.package.Application");
+			WOInject.main(args, "my.app.Application");
 		}
 
 		@Override

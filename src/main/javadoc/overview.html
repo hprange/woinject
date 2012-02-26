@@ -31,7 +31,7 @@
 	You can also override the <CODE>modules</CODE> method to declare the Guice modules to be
 	loaded by the injector.
     <PRE>
-package my.package;
+package my.app;
 
 import com.google.inject.Module;
 import com.woinject.InjectableApplication;
@@ -39,7 +39,7 @@ import com.woinject.WOInject;
 
 public class Application extends InjectableApplication {
 	public static void main(String[] args) {
-		WOInject.main(args, &quot;my.package.Application&quot;);
+		WOInject.main(args, &quot;my.app.Application&quot;);
 	}
 
 	&#64;Override
