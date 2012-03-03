@@ -16,11 +16,12 @@
 package com.woinject;
 
 /**
+ * General exception for WOInject problems.
+ * 
  * @author <a href="mailto:hprange@gmail.com.br">Henrique Prange</a>
  * @since 1.0
  */
 public class WOInjectException extends RuntimeException {
-
     public WOInjectException() {
 	super();
     }

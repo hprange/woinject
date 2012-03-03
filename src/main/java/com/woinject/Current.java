@@ -26,6 +26,21 @@ import java.lang.annotation.Target;
 import com.google.inject.BindingAnnotation;
 
 /**
+ * Apply this annotation to inject the current WOsession and WOContext.
+ * 
+ * <pre>
+ * &#064;Inject
+ * &#064;Current
+ * public WOContext context;
+ * 
+ * &#064;Inject
+ * &#064;Current
+ * public WOSession session;
+ * </pre>
+ * 
+ * The {@link WOInjectModule} configures the required bindings to inject these
+ * classes automatically.
+ * 
  * @author <a href="mailto:hprange@gmail.com.br">Henrique Prange</a>
  * @since 1.0
  */

@@ -30,8 +30,16 @@ import com.webobjects.appserver.WOApplication;
 import er.extensions.appserver.ERXApplication;
 
 /**
+ * The <code>InjectableApplication</code> class is an extension of the
+ * <code>ERXApplication</code> that adds support for dependency injection to
+ * WebObjects applications. It automatically creates the Guice injector and
+ * initializes it with the {@link WOInjectModule}. Additional modules can be
+ * loaded by overriding the {@link InjectableApplication#modules()} method.
+ * 
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
  * @since 1.0
+ * @see Injector
+ * @see WOInjectModule
  */
 public abstract class InjectableApplication extends ERXApplication {
     public static InjectableApplication application() {

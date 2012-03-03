@@ -24,16 +24,20 @@ import javassist.CtMethod;
 import javassist.Loader;
 
 /**
- * Experiment to avoid inheritance of Application, Session, DirectAction and
- * EnterpriseObject classes.
+ * The <code>WOInject</code> class initializes the application intercepting core
+ * methods used by WebObjects classes to create objects.
  * <p>
  * How to use:
  * 
  * <pre>
  * public static void main(String[] argv) {
- *     WOInject.main(argv, &quot;com.company.app.Application&quot;);
+ *     WOInject.init(&quot;com.company.app.Application&quot;, argv);
  * }
  * </pre>
+ * <p>
+ * <strong>Note</strong>: to ensure well functioning, do not obtain the
+ * <code>Application</code> class name programmatically. No WebObjects classes
+ * should be loaded before the WOInject initialization.
  * 
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
  * @since 1.0

@@ -19,31 +19,62 @@ package com.woinject;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.webobjects.appserver.WOContext;
-import com.webobjects.appserver.WOSession;
 
 import er.extensions.appserver.ERXSession;
 import er.extensions.appserver.ERXWOContext;
 
 /**
+ * This class contains the basic <code>WOInject</code> configuration and
+ * auxiliary providers.
+ * 
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
  * @since 1.0
  */
 public class WOInjectModule extends AbstractModule {
+    /**
+     * Make the binding of WOScopes.
+     * 
+     * @see com.google.inject.AbstractModule#configure()
+     */
     @Override
     protected void configure() {
 	bindScope(WORequestScoped.class, WOScopes.REQUEST);
 	bindScope(WOSessionScoped.class, WOScopes.SESSION);
     }
 
-    @Current
+    /**
+     * Provide the current context object or throw an exception if unable to get
+     * it.
+     * 
+     * @return the current context.
+     */
     @Provides
+    @Current
     public WOContext provideContext() {
-	return ERXWOContext.currentContext();
+	WOContext context = ERXWOContext.currentContext();
+
+	if (context == null) {
+	    throw new WOInjectException("Unable to provide the current context.");
+	}
+
+	return context;
     }
 
-    @Current
+    /**
+     * Provide the current session object or throw an exception if unable to get
+     * it.
+     * 
+     * @return Return the current session.
+     */
     @Provides
-    public WOSession provideSession() {
-	return ERXSession.session();
+    @Current
+    public ERXSession provideSession() {
+	ERXSession session = ERXSession.session();
+
+	if (session == null) {
+	    throw new WOInjectException("Unable to provide the current session. Either the session has not been initialized yet, or it has expired.");
+	}
+
+	return session;
     }
 }

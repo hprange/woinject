@@ -40,6 +40,12 @@ class WORequestScope implements Scope {
 	return ERXWOContext.currentContext().request();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.inject.Scope#scope(com.google.inject.Key,
+     * com.google.inject.Provider)
+     */
     public <T> Provider<T> scope(final Key<T> key, final Provider<T> creator) {
 	final String name = key.toString();
 

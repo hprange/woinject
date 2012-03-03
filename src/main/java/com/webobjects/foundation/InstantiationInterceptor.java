@@ -45,11 +45,19 @@ import com.woinject.InjectableApplication;
 import com.woinject.WOInjectException;
 
 /**
+ * The InstantiatorInterceptor class creates objects and injects their members
+ * automatically. Special WebObjects types (components, enterprise objects,
+ * direct actions and sessions) are instantiated using the Guice injector and
+ * are subject to AOP interceptors. This class is private and is not intended to
+ * be used directly by users.
+ * 
  * @author <a href="mailto:hprange@gmail.com.br">Henrique Prange</a>
  * @since 1.0
  */
 class InstantiationInterceptor {
     /**
+     * Special binding annotation used by WOInject to avoid binding conflicts.
+     * 
      * @author <a href="mailto:hprange@gmail.com.br">Henrique Prange</a>
      * @since 1.0
      */
@@ -85,6 +93,21 @@ class InstantiationInterceptor {
 	return InjectableApplication.application().injector();
     }
 
+    /**
+     * Instantiate the object represented by the type parameter. The object is
+     * created by the injector defined in the {@link InjectableApplication}
+     * class if the type is assignable from <code>WOComponent</code>,
+     * <code>EOEnterpriseObject</code>, <code>WOSession</code> or
+     * <code>WODirectAction</code>.
+     * <p>
+     * Other types of objects are instantiated by reflection, and their members
+     * are injected using the {@link Injector#injectMembers(Object)} method.
+     * Those objects are not subject to AOP interceptors.
+     * 
+     * @see _NSUtilities#instantiateObject(Class, Class[], Object[], boolean,
+     *      boolean)
+     * @see Injector#injectMembers(Object)
+     */
     public static <T> T instantiateObject(final Class<T> type, final Class<?>[] parameterTypes, final Object[] parameters, boolean shouldThrow, boolean shouldLog) {
 	Constructor<T> constructor = findConstructor(type, parameterTypes, shouldThrow, shouldLog);
 
@@ -95,6 +118,21 @@ class InstantiationInterceptor {
 	return instantiateObject(constructor, type, parameters, shouldThrow, shouldLog);
     }
 
+    /**
+     * Instantiate the object represented by the type parameter using the
+     * specified constructor. The object is created by the injector defined in
+     * the {@link InjectableApplication} class if the type is assignable from
+     * <code>WOComponent</code>, <code>EOEnterpriseObject</code>,
+     * <code>WOSession</code> or <code>WODirectAction</code>.
+     * <p>
+     * Other types of objects are instantiated by reflection, and their members
+     * are injected using the {@link Injector#injectMembers(Object)} method.
+     * Those objects are not subject to AOP interceptors.
+     * 
+     * @see _NSUtilities#instantiateObject(Class, Class[], Object[], boolean,
+     *      boolean)
+     * @see Injector#injectMembers(Object)
+     */
     public static <T> T instantiateObject(final Constructor<T> constructor, final Class<T> type, final Object[] parameters, boolean shouldThrow, boolean shouldLog) {
 	Injector injector = injector();
 

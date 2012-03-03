@@ -28,9 +28,9 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.ProvisionException;
 import com.google.inject.Scope;
 import com.webobjects.appserver.WOContext;
-import com.webobjects.appserver.WOSession;
 
 import er.extensions.appserver.ERXSession;
 import er.extensions.appserver.ERXWOContext;
@@ -60,9 +60,9 @@ public class TestWOInjectModule {
 
 	ERXSession.setSession(mockSession);
 
-	WOSession result = injector.getInstance(Key.get(WOSession.class, Current.class));
+	ERXSession result = injector.getInstance(Key.get(ERXSession.class, Current.class));
 
-	assertThat(result, is((WOSession) mockSession));
+	assertThat(result, is(mockSession));
     }
 
     @Test
@@ -77,6 +77,20 @@ public class TestWOInjectModule {
 	Scope scope = scopes.get(WOSessionScoped.class);
 
 	assertThat(scope == WOScopes.SESSION, is(true));
+    }
+
+    @Test(expected = ProvisionException.class)
+    public void exceptionIfProvidingNullContext() throws Exception {
+	ERXWOContext.setCurrentContext(null);
+
+	injector.getInstance(Key.get(WOContext.class, Current.class));
+    }
+
+    @Test(expected = ProvisionException.class)
+    public void exceptionIfProvidingNullSession() throws Exception {
+	ERXSession.setSession(null);
+
+	injector.getInstance(Key.get(ERXSession.class, Current.class));
     }
 
     @Before
