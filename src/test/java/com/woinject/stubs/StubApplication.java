@@ -50,6 +50,11 @@ public class StubApplication extends InjectableApplication {
 
     private StubModule stubModule;
 
+    @Override
+    protected Class<StubSession> _sessionClass() {
+	return StubSession.class;
+    }
+
     public String getInjectableField() {
 	return injectableField;
     }

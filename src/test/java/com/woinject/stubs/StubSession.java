@@ -17,12 +17,13 @@ package com.woinject.stubs;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import com.webobjects.appserver.WOSession;
+
+import er.extensions.appserver.ERXSession;
 
 /**
  * @author <a href="mailto:hprange@gmail.com.br">Henrique Prange</a>
  */
-public class StubSession extends WOSession {
+public class StubSession extends ERXSession {
     @Inject
     @Named("test")
     private String injectedText;

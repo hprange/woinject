@@ -17,8 +17,11 @@
 package com.woinject;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provider;
 import com.google.inject.Provides;
+import com.google.inject.TypeLiteral;
 import com.webobjects.appserver.WOContext;
+import com.webobjects.appserver.WOSession;
 
 import er.extensions.appserver.ERXSession;
 import er.extensions.appserver.ERXWOContext;
@@ -32,6 +35,38 @@ import er.extensions.appserver.ERXWOContext;
  */
 public class WOInjectModule extends AbstractModule {
     /**
+     * This class provides the current session object or throws an exception if
+     * unable to get it.
+     * 
+     * @param <T>
+     *            The session class type.
+     * @since 1.0
+     */
+    static class SessionProvider<T extends WOSession> implements Provider<T> {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.inject.Provider#get()
+	 */
+	public T get() {
+	    @SuppressWarnings("unchecked")
+	    T session = (T) ERXSession.session();
+
+	    if (session == null) {
+		throw new WOInjectException("Unable to provide the current session. Either the session has not been initialized yet, or it has expired.");
+	    }
+
+	    return session;
+	}
+    }
+
+    private final Class<? extends WOSession> sessionClass;
+
+    public WOInjectModule(Class<? extends WOSession> sessionClass) {
+	this.sessionClass = sessionClass;
+    }
+
+    /**
      * Make the binding of WOScopes.
      * 
      * @see com.google.inject.AbstractModule#configure()
@@ -40,6 +75,16 @@ public class WOInjectModule extends AbstractModule {
     protected void configure() {
 	bindScope(WORequestScoped.class, WOScopes.REQUEST);
 	bindScope(WOSessionScoped.class, WOScopes.SESSION);
+
+	@SuppressWarnings("unchecked")
+	Class<WOSession> sessionClass = (Class<WOSession>) this.sessionClass;
+
+	bind(sessionClass).annotatedWith(Current.class).toProvider(new TypeLiteral<SessionProvider<WOSession>>() {
+	});
+	bind(ERXSession.class).annotatedWith(Current.class).toProvider(new TypeLiteral<SessionProvider<ERXSession>>() {
+	});
+	bind(WOSession.class).annotatedWith(Current.class).toProvider(new TypeLiteral<SessionProvider<WOSession>>() {
+	});
     }
 
     /**
@@ -58,23 +103,5 @@ public class WOInjectModule extends AbstractModule {
 	}
 
 	return context;
-    }
-
-    /**
-     * Provide the current session object or throw an exception if unable to get
-     * it.
-     * 
-     * @return Return the current session.
-     */
-    @Provides
-    @Current
-    public ERXSession provideSession() {
-	ERXSession session = ERXSession.session();
-
-	if (session == null) {
-	    throw new WOInjectException("Unable to provide the current session. Either the session has not been initialized yet, or it has expired.");
-	}
-
-	return session;
     }
 }

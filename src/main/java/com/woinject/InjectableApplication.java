@@ -26,6 +26,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Stage;
 import com.webobjects.appserver.WOApplication;
+import com.webobjects.appserver.WOSession;
 
 import er.extensions.appserver.ERXApplication;
 
@@ -81,7 +82,10 @@ public abstract class InjectableApplication extends ERXApplication {
     protected Injector createInjector() {
 	List<Module> modules = new ArrayList<Module>();
 
-	modules.add(new WOInjectModule());
+	@SuppressWarnings("unchecked")
+	Class<? extends WOSession> sessionClass = _sessionClass();
+
+	modules.add(new WOInjectModule(sessionClass));
 	modules.addAll(Arrays.asList(modules()));
 
 	return Guice.createInjector(stage(), modules);

@@ -17,13 +17,15 @@ package com.woinject;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -31,6 +33,8 @@ import com.google.inject.Key;
 import com.google.inject.ProvisionException;
 import com.google.inject.Scope;
 import com.webobjects.appserver.WOContext;
+import com.webobjects.appserver.WOSession;
+import com.woinject.stubs.StubSession;
 
 import er.extensions.appserver.ERXSession;
 import er.extensions.appserver.ERXWOContext;
@@ -38,31 +42,44 @@ import er.extensions.appserver.ERXWOContext;
 /**
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
  */
+@RunWith(MockitoJUnitRunner.class)
 public class TestWOInjectModule {
     private Injector injector;
+
+    @Mock
+    private WOContext mockContext;
+
+    @Mock
+    private StubSession mockSession;
 
     private Map<Class<? extends Annotation>, Scope> scopes;
 
     @Test
     public void bindCurrentContextProvider() throws Exception {
-	WOContext mockContext = mock(WOContext.class);
-
-	ERXWOContext.setCurrentContext(mockContext);
-
 	WOContext result = injector.getInstance(Key.get(WOContext.class, Current.class));
 
 	assertThat(result, is(mockContext));
     }
 
     @Test
-    public void bindCurrentSessionProvider() throws Exception {
-	ERXSession mockSession = mock(ERXSession.class);
-
-	ERXSession.setSession(mockSession);
-
+    public void bindCurrentERXSessionProvider() throws Exception {
 	ERXSession result = injector.getInstance(Key.get(ERXSession.class, Current.class));
 
+	assertThat(result, is((ERXSession) mockSession));
+    }
+
+    @Test
+    public void bindCurrentSessionProvider() throws Exception {
+	StubSession result = injector.getInstance(Key.get(StubSession.class, Current.class));
+
 	assertThat(result, is(mockSession));
+    }
+
+    @Test
+    public void bindCurrentWOSessionProvider() throws Exception {
+	WOSession result = injector.getInstance(Key.get(WOSession.class, Current.class));
+
+	assertThat(result, is((WOSession) mockSession));
     }
 
     @Test
@@ -95,8 +112,11 @@ public class TestWOInjectModule {
 
     @Before
     public void setup() {
-	injector = Guice.createInjector(new WOInjectModule());
+	injector = Guice.createInjector(new WOInjectModule(StubSession.class));
 
 	scopes = injector.getScopeBindings();
+
+	ERXWOContext.setCurrentContext(mockContext);
+	ERXSession.setSession(mockSession);
     }
 }
