@@ -39,7 +39,15 @@ import javassist.Loader;
  * @since 1.0
  */
 public class WOInject {
-    public static void main(String[] args, String applicationClass) {
+    /**
+     * Initialize the <code>WOApplication</code> with the WOInject capabilities.
+     * 
+     * @param applicationClass
+     *            the name of the application class
+     * @param args
+     *            the application's command line arguments
+     */
+    public static void init(String applicationClass, String[] args) {
 	final ClassPool pool = ClassPool.getDefault();
 
 	Loader loader = AccessController.doPrivileged(new PrivilegedAction<Loader>() {
