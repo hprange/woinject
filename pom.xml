@@ -40,17 +40,16 @@
 							<aggregation>
 								<output>${project.build.directory}/all-min.js</output>
 								<includes>
-									<include>**/shBrushBash-min.js</include>
-									<include>**/shBrushJava-min.js</include>
-									<include>**/shBrushXml-min.js</include>
+									<include>**/bootstrap-min.js</include>
+									<include>**/prettify-min.js</include>
 								</includes>
 							</aggregation>
 							<aggregation>
 								<output>${project.build.directory}/all-min.css</output>
 								<includes>
 									<include>**/bootstrap-min.css</include>
-									<include>**/shCore-min.css</include>
-									<include>**/shCoreDefault-min.css</include>
+									<include>**/bootstrap-responsive-min.css</include>
+									<include>**/prettify-min.css</include>
 									<include>**/woinject-min.css</include>
 								</includes>
 							</aggregation>
