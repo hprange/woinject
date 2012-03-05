@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>woinject - Test framework for WebObjects</title>
+		<title>WOInject - Dependency Injection framework for WebObjects</title>
 		<script type="text/javascript" src="js/shCore.js"></script>
 		<script type="text/javascript" src="js/all-min.js"></script>
 		<link href="css/all-min.css" rel="stylesheet" type="text/css" />
@@ -30,7 +30,53 @@
 			<div class="description">
 				WOInject is a dependency injection framework for WebObjects. It extends the powerful Google Guice framework and adds capabilities specific for WO applications. Dependency injection is a useful technique for program modularization leading to more testable code. WOInject allows to write better APIs and decoupled code reducing the hurdle of wiring things together.
 			</div>
-			<h2>WOInject Basics</h2>
+			<h2>Introduction</h2>
+			<p>
+				WOInject is an extension of the Google Guice framework created to enable the use of dependency injection with WebObjects applications and frameworks.
+			</p>
+			<p>
+				Google Guice is a lightweight framework for dependency injection. Its key features include type safe binding configuration, scopes and basic AOP.
+			</p>
+			<p>
+				If you're not familiar with Guice, check the <a href="http://code.google.com/p/google-guice/wiki/Motivation">User Guide</a> and the presentations made by <a href="http://www.youtube.com/watch?v=FFXhXZnmEQM">Bob Lee</a> and <a href="http://www.youtube.com/watch?v=hBVJbzAagfs&feature=player_embedded">Dhanji Prasanna</a>. If you want a complete reference on the subject, read the <a href="http://manning.com/prasanna/">Dependency Injection book</a> from Dhanji Prasanna. 
+			</p>
+			<h2>Why Dependency Injection?</h2>
+			<p>
+				DI and programming by interfaces are techniques that lead to more testable and decoupled code.
+			</p>
+			<h2>Use Cases</h2>
+			<h3>Development vs Production Implementations</h3>
+			<p>
+				Have you ever recurred to if(application.isDevelopmentMode()) to swap between production code and development code?
+			</p>
+			<h3>Evolution of Software</h3>
+			<p>
+				If there is one assertion we can make about under development software is that requirements change over time.
+			</p>
+			<p>
+				When the application is first defined, the client decides 
+			</p>
+			<p>
+				WOInject and Guice are not a requirement to program to interfaces and to apply  dependency injection. However, these tools simplify the process of wiring interfaces to their respective implementations. When there is the need for a new implementation of one interface, only one line of code has to be modified to spread the change over the entire system.
+			</p>
+			<h3>Loose Coupling</h3>
+			<p>
+				How one can get the user logged in the session from an Enterprise Object without tying it to the session class? 
+			</p>
+			<p>
+				There are a few options: use a ThreadLocal, use the WOSession + valueForKey, or inject the user into the EO. 
+			</p>
+			<p>
+				Sample code: provider that receives the current session and return the user.
+			</p>
+			<p>				
+				This approach has the following benefits:
+			</p>
+			<ol>
+				<li>The EO code is easily testable. Just pass in a mock provider.</li>
+				<li>TThe EO is decoupled from the Session and ThreadLocal classes, making it easy to isolate from the application's code. </li>
+				<li>The Provider of Users can completely change its implementation without affecting the EO code.</li>
+			</ol>
 			<div class="footer">
 				get the source code on GitHub : <a href="http://github.com/hprange/woinject">hprange/woinject</a>
 			</div>
