@@ -1,4 +1,75 @@
+body
+{
+	margin-top:1em;
+	background-color:#fff;
+	font-family:Helvetica, Arial, FreeSans, san-serif;
+}
+
+#container
+{
+	width:760px;
+	margin:0 auto;
+}
+
+h1, h2, h3, a {
+	color: #2fb3d1;
+}
+
+h1
+{
+	font-size:3.8em;
+	margin-bottom:3px;
+}
+
+h1 .small
+{
+	font-size:.4em;
+}
+
+h1 a
+{
+	text-decoration:none;
+}
+
+h2
+{
+	font-size:1.5em;
+}
+
+h3
+{
+	text-align:center;
+}
+
+.description
+{
+	font-size:1.2em;
+	margin-bottom:30px;
+	margin-top:30px;
+	font-style:italic;
+}
+
 .download
 {
 	float:right;
+}
+
+hr
+{
+	border:0;
+	width:80%;
+	border-bottom:1px solid #aaa;
+}
+
+li
+{
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+.footer
+{
+	text-align:center;
+	padding-top:30px;
+	font-style:italic;
 }

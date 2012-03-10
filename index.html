@@ -19,25 +19,23 @@
 	</head>
 	<body>
 		<a href="http://github.com/hprange/woinject"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
-		<div class="container">
+		<div id="container">
 			<div class="download">
 				<a href="http://github.com/hprange/woinject/zipball/woinject-1.0-SNAPSHOT">
 					<img border="0" width="90" src="images/zip.png" alt="" /></a>
 				<a href="https://github.com/downloads/hprange/woinject/woinject-1.0-SNAPSHOT.jar">
 					<img border="0" width="90" src="images/jar.png" alt="" /></a>
 			</div>
-			<header>
-				<h1>WOInject</h1>
-			</header>
+			<h1><a href="index.html"><img border="0" src="images/woinject.png" alt="" /></a></h1>
 			<div class="description">
-				WOInject is a dependency injection framework for WebObjects. It extends the powerful Google Guice framework and adds capabilities specific for WO applications. Dependency injection is a useful technique for program modularization leading to more testable code. WOInject allows to write better APIs and decoupled code reducing the hurdle of wiring things together.
+				WOInject is a dependency injection framework for WebObjects based on Google Guice.
 			</div>
 			<h2>Features</h2>
 			<p>
 				<ul>
-					<li><strong>Minimal configuration</strong>: initialize your application using the WOInject classes and the application is ready for dependency injection. No configuration of VM agents, XML or properties is required.</li>
-					<li><strong>Deep integration</strong>: delegate the creation of objects like components, enterprise objects, sessions and direct actions to Guice. Take advantage of dependency injection and AOP support without inheriting any special classes.</li>
-					<li><strong>Special scopes</strong>: provide scopes to inject objects per session (@WOSessionScoped) or request (@WORequestScoped).</li>	
+					<li><strong>Minimal configuration</strong>: no configuration of VM agents, XML or properties is required. Initialize your application using the WOInject classes and the application is ready for dependency injection.</li>
+					<li><strong>Deep integration</strong>: take advantage of dependency injection and Guice's AOP support without inheriting any special classes.</li>
+					<li><strong>Special scopes</strong>: provide scopes to inject objects per session or request.</li>	
 					<li><strong>Type safe</strong>: make use of Java 5 features and Guice approach to provide type safe binding configuration.</li>
 				</ul>
 			</p>
@@ -52,7 +50,7 @@ import com.woinject.WOInject;
 
 public class Application extends InjectableApplication {
     public static void main(String[] args) {
-        WOInject.main(args, "my.app.Application");
+        WOInject.init("my.app.Application", args);
     }
 
     @Override
@@ -99,9 +97,10 @@ $ git clone git://github.com/hprange/woinject</pre>
 			<h2>License</h2>
 			<p>WOInject is free software released under the Apache 2 license.</p>
 			<h2>Author</h2>
-			<p>Henrique Prange (hprange at gmail.com)</p>
+			<p>Henrique Prange (@hprange)</p>
 			<h2>Contributors</h2>
-			<p>Sébastien Letélie</p>
+			<p>Everton Caetano (@Everton_Caetano)</p>
+			<p>Sébastien Letélie (@sebmade)</p>
 			<div class="footer">
 				get the source code on GitHub : <a href="http://github.com/hprange/woinject">hprange/woinject</a>
 			</div>
