@@ -28,28 +28,95 @@
 			</div>
 			<h1><a href="index.html"><img border="0" src="images/woinject.png" alt="" /></a></h1>
 			<div class="description">
-				WOInject is a dependency injection framework for WebObjects. It extends the powerful Google Guice framework and adds capabilities specific for WO applications. Dependency injection is a useful technique for program modularization leading to more testable code. WOInject allows to write better APIs and decoupled code reducing the hurdle of wiring things together.
+				WOInject is a dependency injection framework for WebObjects based on Google Guice.
 			</div>
 			<h2>Introduction</h2>
 			<p>
-				WOInject is an extension of the Google Guice framework created to enable the use of dependency injection with WebObjects applications and frameworks.
+				WOInject is an extension of the Google Guice framework created to enable the use of dependency injection with WebObjects applications and frameworks. Dependency injection (DI) is a useful technique for program modularization leading to more testable code. WOInject allows to write better APIs and decoupled code reducing the hurdle of wiring things together.
 			</p>
 			<p>
-				Google Guice is a lightweight framework for dependency injection. Its key features include type safe binding configuration, scopes and basic AOP.
-			</p>
-			<p>
-				If you're not familiar with Guice, check the <a href="http://code.google.com/p/google-guice/wiki/Motivation">User Guide</a> and the presentations made by <a href="http://www.youtube.com/watch?v=FFXhXZnmEQM">Bob Lee</a> and <a href="http://www.youtube.com/watch?v=hBVJbzAagfs&feature=player_embedded">Dhanji Prasanna</a>. If you want a complete reference on the subject, read the <a href="http://manning.com/prasanna/">Dependency Injection book</a> from Dhanji Prasanna. 
+				<a href="http://code.google.com/p/google-guice/" target="_blank">Google Guice</a> is a lightweight framework for dependency injection. Its key features include type safe binding configuration, scopes and basic AOP. If you're not familiar with Guice, check the <a href="http://code.google.com/p/google-guice/wiki/Motivation" target="_blank"> Guice's User Guide</a>, the <a href="http://www.youtube.com/watch?v=FFXhXZnmEQM" target="_blank">Bob Lee talk</a> and <a href="http://www.youtube.com/watch?v=hBVJbzAagfs&feature=player_embedded" target="_blank">Dhanji Prasanna presentation</a>. If you want a complete reference on the subject, read the <a href="http://manning.com/prasanna/" target="_blank">Dependency Injection book</a> from Dhanji Prasanna. 
 			</p>
 			<h2>Why Dependency Injection?</h2>
 			<p>
 				DI and programming by interfaces are techniques that lead to more testable and decoupled code.
 			</p>
-			<h2>Use Cases</h2>
+			<h2>WOInject Initialization</h2>
+			<p>
+				It is simple to initialize the application with WOInject. Update the <code>Application</code> class to extend the <code>InjectableApplication</code> (line 6). Then initialize the applicaiton using the <code>WOInject.init</code> method (line 8).
+			</p>
+			<pre class="brush: java; toolbar: false; highlight: [6,8];">
+package my.app;
+
+import com.woinject.InjectableApplication;
+import com.woinject.WOInject;
+
+public class Application extends InjectableApplication {
+    public static void main(String[] args) {
+        WOInject.init("my.app.Application", args);
+    }
+    ...
+}</pre>
+			<p>
+				<strong>IMPORTANT</strong>: the application class name cannot be obtained programmatically (for example, Application.class.getName()). No WebObjects basic classes should be loaded before the WOInject initialization.
+			</p>
+			<p>
+				Loading Guice configuration modules is also straightforward. The <code>modules</code> method of the <code>InjectableApplication</code> class can be overridden to return an array of modules to be loaded by the injector.
+			</p>
+			<pre class="brush: java; toolbar: false;">
+public class Application extends InjectableApplication {
+    ...
+    @Override
+    protected Module[] modules() {
+        return new Module[] { new MyModule() };
+    }
+}</pre>
+			<h2>The Session and Request Scopes</h2>
+			<p>
+				Scopes is one of the best features provided by Guice. It let change the lifecycle of objects easily with a simple configuration modification. Guice provides the <code>@Singleton</code> annotation that can be used to create objects that are instantiated once per injector and reused whenever needed. No special code is required to instantiate the object as a singleton. If you want to change the object's lifecycle behavior just change the scope, and it's done.
+			</p>
+			<p>
+				WOInject contributes two scopes: WORequest scope and WOSession scope. Scopes can be configured in <code>bind</code> statements (lines 5 and 8):
+			</p>
+			<pre class="brush: java; toolbar: false; highlight: [5,8];">
+public class MyModule extends AbstractModule {
+	...
+	protected void configure() {
+		bind(Formatter.class).to(NotThreadSafeFormatter.class)
+			.in(WORequestScoped.class);
+		
+		bind(Config.class).to(ConfigImpl.class)
+			.in(WOSessionScoped.class);
+	}
+}</pre>	
+			<p>
+				Alternatively, it's possible to specify the scope for a type by applying the scope annotation to the implementation class directly (line 1).
+			</p>
+			<pre class="brush: java; toolbar: false; highlight: [1];">
+@WORequestScoped
+public class SimpleFormatter implements Formatter {
+	...
+}</pre>
+			<h2>The <code>@Current</code> Annotation</h2>
+			<p>
+				There are certain situations where WebObjects logic requires the current <code>WOContext</code>. WOInject provides the <code>@Current</code> annotation and automatically binds the existing WOContext object using this annotation. The current context can be injected like this:
+			</p>
+			<pre class="brush: java; toolbar: false;">
+public class AnyObject {
+	@Inject @Current
+	private WOContext context;
+	...
+}</pre>
+			<p>
+				The same annotation can be used to inject the current session. It supports the <code>WOSession</code>, <code>ERXSession</code> or <code>Session</code> (yes, the session class of your application) types.
+			</p>
+			<!--<h2>Use Cases</h2>
 			<h3>Development vs Production Implementations</h3>
 			<p>
-				Have you ever recurred to if(application.isDevelopmentMode()) to swap between production code and development code?
+				Have you ever recurred to <code>if(application.isDevelopmentMode())</code> to swap between production code and development code? The application calls real services in production. In development, however, the real services can be unavailable. The application can address this problem calling StubServices instead.
+Guice has the concept of Stages. WOInject maps the Development and the Production stages accordingly to the value of the Application's isDevelopmentMode method.
 			</p>
-			<h3>Evolution of Software</h3>
+			<h3>Evolution of Software (Architecture Evolution vs Revolution) </h3>
 			<p>
 				If there is one assertion we can make about under development software is that requirements change over time.
 			</p>
@@ -61,10 +128,10 @@
 			</p>
 			<h3>Loose Coupling</h3>
 			<p>
-				How one can get the user logged in the session from an Enterprise Object without tying it to the session class? 
+				How one can get the user logged in the session from an Enterprise Object without tying it to the session class?
 			</p>
 			<p>
-				There are a few options: use a ThreadLocal, use the WOSession + valueForKey, or inject the user into the EO. 
+				There are a few options: use a <code>ThreadLocal</code>, use the <code>WOSession.valueForKey</code> method, or inject the user into the EO. 
 			</p>
 			<p>
 				Sample code: provider that receives the current session and return the user.
@@ -74,9 +141,17 @@
 			</p>
 			<ol>
 				<li>The EO code is easily testable. Just pass in a mock provider.</li>
-				<li>TThe EO is decoupled from the Session and ThreadLocal classes, making it easy to isolate from the application's code. </li>
+				<li>The EO is decoupled from the <code>Session</code> and <code>ThreadLocal</code> classes, making it easy to isolate from the application's code. </li>
 				<li>The Provider of Users can completely change its implementation without affecting the EO code.</li>
-			</ol>
+			</ol>-->
+			<h2>Limitations</h2>
+			<ul>
+				<li>Constructor injection is not allowed for enterprise objects, components, direct actions and session.</li>
+				<li>The basic AOP support provided by Guice is only allowed for classes that inherit from EOEnterpriseObject, WOComponent, WODirectAction and WOSession types. Other <strong>WebObjects classes</strong> are not subject to AOP.</li>
+				<li>The <code>WOContext</code> class must be bound with an annotation. The WOInject framework already binds the existing WOContext using the <code>@Current</code> annotation.</li>
+			</ul>
+			<h2>Conclusion</h2>
+			<p>Guice is a powerful framework for dependency injection. WOInject incorporates Guice features into WebObjects applications in a simple and non intrusive form allowing for dependency injection in a type safe manner. </p>
 			<div class="footer">
 				get the source code on GitHub : <a href="http://github.com/hprange/woinject">hprange/woinject</a>
 			</div>
