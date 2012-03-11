@@ -41,7 +41,7 @@
 			<p>
 				DI and programming by interfaces are techniques that lead to more testable and decoupled code.
 			</p>
-			<h2>WOInject Initialization</h2>
+			<h2>WOInject Setup</h2>
 			<p>
 				It is simple to initialize the application with WOInject. Update the <code>Application</code> class to extend the <code>InjectableApplication</code> (line 6). Then initialize the applicaiton using the <code>WOInject.init</code> method (line 8).
 			</p>
@@ -58,7 +58,7 @@ public class Application extends InjectableApplication {
     ...
 }</pre>
 			<p>
-				<strong>IMPORTANT</strong>: the application class name cannot be obtained programmatically (for example, Application.class.getName()). No WebObjects basic classes should be loaded before the WOInject initialization.
+				<strong>IMPORTANT</strong>: the application class name cannot be obtained programmatically (for example, Application.class.getName()). No WebObjects core classes should be loaded before the WOInject initialization.
 			</p>
 			<p>
 				Loading Guice configuration modules is also straightforward. The <code>modules</code> method of the <code>InjectableApplication</code> class can be overridden to return an array of modules to be loaded by the injector.
@@ -99,7 +99,7 @@ public class SimpleFormatter implements Formatter {
 }</pre>
 			<h2>The <code>@Current</code> Annotation</h2>
 			<p>
-				There are certain situations where WebObjects logic requires the current <code>WOContext</code>. WOInject provides the <code>@Current</code> annotation and automatically binds the existing WOContext object using this annotation. The current context can be injected like this:
+				There are certain situations where WebObjects logic requires the current <code>WOContext</code>. WOInject provides the <code>@Current</code> annotation and automatically binds the existing WOContext object. The current context can be injected like this:
 			</p>
 			<pre class="brush: java; toolbar: false;">
 public class AnyObject {
@@ -151,7 +151,9 @@ Guice has the concept of Stages. WOInject maps the Development and the Productio
 				<li>The <code>WOContext</code> class must be bound with an annotation. The WOInject framework already binds the existing WOContext using the <code>@Current</code> annotation.</li>
 			</ul>
 			<h2>Conclusion</h2>
-			<p>Guice is a powerful framework for dependency injection. WOInject incorporates Guice features into WebObjects applications in a simple and non intrusive form allowing for dependency injection in a type safe manner. </p>
+			<p>
+				Guice is a powerful framework for dependency injection. WOInject incorporates Guice features into WebObjects applications in a simple and non intrusive form allowing for dependency injection in a type safe manner.
+			</p>
 			<div class="footer">
 				get the source code on GitHub : <a href="http://github.com/hprange/woinject">hprange/woinject</a>
 			</div>
