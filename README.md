@@ -1,12 +1,7 @@
 WOInject
 ========
 
-WOInject is a dependency injection framework for WebObjects. It extends
-the powerful Google Guice framework and adds capabilities specific for
-WO applications. Dependency injection is a useful technique for program
-modularization leading to more testable code. WOInject allows to write
-better APIs and decoupled code reducing the hurdle of wiring things
-together.
+WOInject is an extension of the Google Guice framework created to enable the use of dependency injection with WebObjects applications and frameworks. Dependency injection (DI) is a useful technique for program modularization leading to more testable code. WOInject allows to write better APIs and decoupled code reducing the hurdle of wiring things together.
 
 **Version**: 1.0-SNAPSHOT
 
@@ -20,16 +15,10 @@ Requirements
 Features
 --------
 
-* **Minimal configuration**: initialize your application using the WOInject
-classes and the application is ready for dependency injection. No configuration
-of VM agents, XML or properties is required.
-* **Deep integration**: delegate the creation of objects like components,
-enterprise objects, sessions and direct actions to Guice. Take advantage of
-dependency injection and AOP support without inheriting any special classes.
-* **Special scopes**: provide scopes to inject objects per session
-(@WOSessionScoped) or request (@WORequestScoped).
-* **Type safe**: make use of Java 5 features and Guice approach to provide
-type safe binding configuration.
+* **Minimal configuration**: no configuration of VM agents, XML or properties is required. Initialize your application using the WOInject classes and the application is ready for dependency injection.
+* **Deep integration**: take advantage of dependency injection and Guice's AOP support without inheriting any special classes.
+* **Special scopes**: provide scopes to inject objects per session or request.
+* **Type safe**: make use of Java 5 features and Guice approach to provide type safe binding configuration.
 
 
 Installation
@@ -59,7 +48,7 @@ Usage
 
 	public class Application extends InjectableApplication {
 		public static void main(String[] args) {
-			WOInject.main(args, "my.app.Application");
+			WOInject.init("my.app.Application", args);
 		}
 
 		@Override
