@@ -35,7 +35,7 @@ import com.google.inject.BindingAnnotation;
  * 
  * &#064;Inject
  * &#064;Current
- * public WOSession session;
+ * public Session session;
  * </pre>
  * 
  * The {@link WOInjectModule} configures the required bindings to inject these

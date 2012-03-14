@@ -26,7 +26,7 @@
 	If you're familiar with Guice, WOInject doesn't require much effort to bring dependency
 	injection to your objects. The <CODE>Application</CODE> class must extend the
 	<CODE>InjectableApplication</CODE> class. Then the application must be initialized using the
-	<CODE>WOInject.main</CODE> method as below.
+	<CODE>WOInject.init</CODE> method as below.
 	<P>
 	You can also override the <CODE>modules</CODE> method to declare the Guice modules to be
 	loaded by the injector.
@@ -39,7 +39,7 @@ import com.woinject.WOInject;
 
 public class Application extends InjectableApplication {
 	public static void main(String[] args) {
-		WOInject.main(args, &quot;my.app.Application&quot;);
+		WOInject.init(&quot;my.app.Application&quot;, args);
 	}
 
 	&#64;Override
@@ -50,9 +50,9 @@ public class Application extends InjectableApplication {
     </PRE>
     <STRONG>NOTE</STRONG>: Do not get the <CODE>Application</CODE> class name programatically
     (using <CODE>Application.class.getName()</CODE>). You have to pass this parameter as
-    <CODE>String</CODE> to not load WebObjects basic classes before WOInject do its initialization.
+    <CODE>String</CODE> to not load WebObjects core classes before WOInject initialization.
     <P>
-    See Google Guice <A HREF="http://code.google.com/p/google-guice/wiki/Motivation">documentation</A>
+    See <A HREF="http://code.google.com/p/google-guice/wiki/Motivation">Google Guice documentation</A>
     for more information.
   </BODY>
 </HTML>

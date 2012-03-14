@@ -22,10 +22,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.google.inject.ScopeAnnotation;
+import com.webobjects.appserver.WORequest;
 
 /**
  * Apply this to implementation classes when you want one instance per request.
  * 
+ * @see com.google.inject.Scopes#SINGLETON
+ * @see WORequest
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
  * @since 1.0
  */
