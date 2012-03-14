@@ -9,6 +9,7 @@ Requirements
 ------------
 
 * [Guice](http://code.google.com/p/google-guice/) 3.0
+* [Javassist](http://www.javassist.org/) 3.14
 * [Project Wonder](http://wiki.objectstyle.org/confluence/display/WONDER/Home) 5
 * WebObjects 5
 
@@ -34,8 +35,8 @@ Maven users have to add the dependency declaration:
 
 Non Maven users have to:
 
-1. Download the woinject.jar.
-2. Add the woinject library to the build path.
+1. Download the woinject-1.0-bin.zip package.
+2. Add the woinject.jar and the other required libraries to the build path.
 
 Usage
 -----
