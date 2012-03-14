@@ -155,6 +155,7 @@
 						<exclude>README.md</exclude>
 						<exclude>.gitignore</exclude>
 						<exclude>.maven/**</exclude>
+						<exclude>src/assemble/**</exclude>
 					</excludes>
 					<properties>
 						<year>${project.inceptionYear}</year>
