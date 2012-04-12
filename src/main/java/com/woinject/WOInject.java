@@ -43,23 +43,6 @@ import javassist.Loader;
  * @since 1.0
  */
 public class WOInject {
-    static class EnhancedLoader extends Loader {
-	public EnhancedLoader(ClassPool pool) {
-	    super(pool);
-	}
-
-	@Override
-	protected Class<?> loadClassByDelegation(String name) throws ClassNotFoundException {
-	    if (doDelegation) {
-		if (name.startsWith("com.apple.")) {
-		    return delegateToParent(name);
-		}
-	    }
-
-	    return super.loadClassByDelegation(name);
-	}
-    }
-
     /**
      * Initialize the <code>WOApplication</code> with the WOInject capabilities.
      * 
@@ -73,9 +56,11 @@ public class WOInject {
 
 	Loader loader = AccessController.doPrivileged(new PrivilegedAction<Loader>() {
 	    public Loader run() {
-		return new EnhancedLoader(pool);
+		return new Loader(pool);
 	    }
 	});
+
+	loader.delegateLoadingOf("com.apple.");
 
 	try {
 	    CtClass clazz = pool.get("com.webobjects.foundation._NSUtilities");
