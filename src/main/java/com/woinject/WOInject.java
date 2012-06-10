@@ -15,13 +15,11 @@
  */
 package com.woinject;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import java.lang.reflect.Method;
 
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
-import javassist.Loader;
 
 /**
  * The <code>WOInject</code> class initializes the application intercepting core
@@ -54,16 +52,11 @@ public class WOInject {
     public static void init(String applicationClass, String[] args) {
 	final ClassPool pool = ClassPool.getDefault();
 
-	Loader loader = AccessController.doPrivileged(new PrivilegedAction<Loader>() {
-	    public Loader run() {
-		return new Loader(pool);
-	    }
-	});
-
-	loader.delegateLoadingOf("com.apple.");
-
 	try {
-	    CtClass clazz = pool.get("com.webobjects.foundation._NSUtilities");
+	    String classname = "com.webobjects.foundation._NSUtilities";
+
+	    CtClass clazz = pool.get(classname);
+
 	    CtMethod method = clazz.getDeclaredMethod("instantiateObject");
 
 	    method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObject($1, $2, $3, $4, $5); }");
@@ -72,7 +65,9 @@ public class WOInject {
 
 	    method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObject($1, $2, $3, $4, $5); }");
 
-	    Thread.currentThread().setContextClassLoader(loader);
+	    ClassLoader loader = Thread.currentThread().getContextClassLoader();
+
+	    loadClass(loader, classname, clazz.toBytecode());
 
 	    Class<?> erxApp = loader.loadClass("er.extensions.appserver.ERXApplication");
 
@@ -88,5 +83,31 @@ public class WOInject {
 	} catch (Throwable exception) {
 	    throw new Error("Cannot initialize the application to take advantage of WOInject features.", exception);
 	}
+    }
+
+    private static Class<?> loadClass(ClassLoader loader, String classname, byte[] bytes) {
+	Class<?> clazz = null;
+
+	try {
+	    Class<?> loaderClass = Class.forName("java.lang.ClassLoader");
+
+	    Method method = loaderClass.getDeclaredMethod("defineClass", new Class[] { String.class, byte[].class, int.class, int.class });
+
+	    method.setAccessible(true);
+
+	    try {
+		Object[] args = new Object[] { classname, bytes, new Integer(0), new Integer(bytes.length) };
+
+		clazz = (Class<?>) method.invoke(loader, args);
+	    } finally {
+		method.setAccessible(false);
+	    }
+	} catch (Exception exception) {
+	    exception.printStackTrace();
+
+	    System.exit(1);
+	}
+
+	return clazz;
     }
 }
