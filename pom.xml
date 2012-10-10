@@ -3,7 +3,7 @@
 
 	<groupId>com.woinject</groupId>
 	<artifactId>woinject</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.1-SNAPSHOT</version>
 	<name>WOInject Framework</name>
 	<description>WOInject is a framework to enable dependency injection into WebObjects applications.</description>
 	<url>http://github.com/hprange/woinject</url>
