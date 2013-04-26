@@ -16,12 +16,15 @@
 
 package com.woinject.stubs;
 
+import java.lang.reflect.Method;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
+import com.webobjects.appserver.WOApplication;
 import com.woinject.InjectableApplication;
 
 /**
@@ -37,6 +40,18 @@ public class StubApplication extends InjectableApplication {
 
 	    bind(String.class).annotatedWith(Names.named("field")).toInstance("fieldInjected");
 	    bind(String.class).annotatedWith(Names.named("method")).toInstance("methodInjected");
+	}
+    }
+
+    public static void setApplication(WOApplication application) {
+	try {
+	    Method method = WOApplication.class.getDeclaredMethod("_setApplication", WOApplication.class);
+
+	    method.setAccessible(true);
+
+	    method.invoke(null, application);
+	} catch (Exception exception) {
+	    throw new RuntimeException(exception);
 	}
     }
 

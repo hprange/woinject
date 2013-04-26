@@ -90,7 +90,9 @@ class InstantiationInterceptor {
     }
 
     private static Injector injector() {
-	return InjectableApplication.application().injector();
+	InjectableApplication application = InjectableApplication.application();
+
+	return application == null ? null : application.injector();
     }
 
     /**

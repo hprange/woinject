@@ -198,6 +198,16 @@ public class TestInstantiationInterceptor extends AbstractInjectableTestCase {
     }
 
     @Test
+    public void instantiateObjectWithReflectionIfApplicationIsNull() throws Exception {
+	StubApplication.setApplication(null);
+
+	StubEnterpriseObject result = InstantiationInterceptor.instantiateObject(StubEnterpriseObject.class, null, null, true, false);
+
+	assertThat(result, notNullValue());
+	assertThat(result, instanceOf(StubEnterpriseObject.class));
+    }
+
+    @Test
     public void instantiateObjectWithReflectionIfInjectorIsNull() throws Exception {
 	application.setReturnNullInjector(true);
 

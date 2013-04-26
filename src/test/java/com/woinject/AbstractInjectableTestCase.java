@@ -61,7 +61,9 @@ public abstract class AbstractInjectableTestCase {
 
     @After
     public void tearDown() {
-	application.terminate();
+	if (application != null) {
+	    application.terminate();
+	}
 
 	application = null;
     }
