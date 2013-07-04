@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServlet;
  * 
  * <pre>
  * 	<servlet>
- * 		<servlet-name>woinjectServlet</servlet-name>
+ * 		<servlet-name>WOInjectServlet</servlet-name>
  * 		<servlet-class>com.woinject.servlet.WOInjectServlet</servlet-class>
  * 		<load-on-startup>1</load-on-startup>
  *  	</servlet>
