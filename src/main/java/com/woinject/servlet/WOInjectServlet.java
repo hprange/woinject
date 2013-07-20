@@ -28,18 +28,20 @@ import javax.servlet.http.HttpServlet;
 /**
  * The <code>WOInjectServlet</code> initializes the WOInject framework in the
  * context of servlet applications.
- * 
+ * <p>
  * Add the following snippet into the web.xml:
- * 
+ * <p>
+ *
  * <pre>
- * 	<servlet>
- * 		<servlet-name>WOInjectServlet</servlet-name>
- * 		<servlet-class>com.woinject.servlet.WOInjectServlet</servlet-class>
- * 		<load-on-startup>1</load-on-startup>
- *  	</servlet>
+ * 	&lt;servlet&gt;
+ * 		&lt;servlet-name&gt;WOInjectServlet&lt;/servlet-name&gt;
+ * 		&lt;servlet-class&gt;com.woinject.servlet.WOInjectServlet&lt;/servlet-class&gt;
+ * 		&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ * 	&lt;/servlet&gt;
  * </pre>
- * 
+ *
  * @author <a href="mailto:hprange@gmail.com.br">Henrique Prange</a>
+ * @since 1.1
  */
 public class WOInjectServlet extends HttpServlet {
     private static Class<?> loadClass(ClassLoader loader, String classname, byte[] bytes) {
@@ -66,6 +68,12 @@ public class WOInjectServlet extends HttpServlet {
 	return clazz;
     }
 
+    /**
+     * Load the changed <code>_NSUtilities</code> class required by WOInject
+     * during the container initialization.
+     *
+     * @see javax.servlet.GenericServlet#init()
+     */
     @Override
     public void init() throws ServletException {
 	super.init();

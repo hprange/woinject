@@ -16,7 +16,7 @@
 /**
  * This package contains features related to servlet environments.
  * 
- * @since 1.0
+ * @since 1.1
  */
 package com.woinject.servlet;
 
