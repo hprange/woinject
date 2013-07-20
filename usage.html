@@ -110,6 +110,17 @@ public class AnyObject {
 			<p>
 				The same annotation can be used to inject the current session. It supports the <code>WOSession</code>, <code>ERXSession</code> or <code>Session</code> (yes, the session class of your application) types.
 			</p>
+			<h2>Deploying on Servlet Environments</h2>
+			<p>
+				Using WOInject on servlet environments is also possible. In order to initialize WOInject correctly, the <code>WOInjectServlet</code> must be loaded earlier in the context of servlet applications. Add the following snippet into the application's web.xml to load the WOInject servlet:
+			</p>
+			<pre class="brush: xml; toolbar: false;">
+<servlet>
+		<servlet-name>WOInjectServlet</servlet-name>
+		<servlet-class>com.woinject.servlet.WOInjectServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+</servlet></pre>
+			
 			<!--<h2>Use Cases</h2>
 			<h3>Development vs Production Implementations</h3>
 			<p>
