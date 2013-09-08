@@ -18,10 +18,13 @@ package com.woinject;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
+import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.Loader;
+
+import com.webobjects.foundation._NSUtilities;
 
 /**
  * The <code>WOInject</code> class initializes the application intercepting core
@@ -53,6 +56,8 @@ public class WOInject {
      */
     public static void init(String applicationClass, String[] args) {
 	final ClassPool pool = ClassPool.getDefault();
+
+	pool.insertClassPath(new ClassClassPath(_NSUtilities.class));
 
 	Loader loader = AccessController.doPrivileged(new PrivilegedAction<Loader>() {
 	    public Loader run() {
