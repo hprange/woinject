@@ -73,9 +73,9 @@ public abstract class InjectableApplication extends ERXApplication {
      * {@link InjectableApplication#modules()} method.
      * <p>
      * Override this method to create your own injector.
-     * 
-     * @return The main <code>Injector<code> for the entire application
-     * 
+     *
+     * @return The main <code>Injector</code> for the entire application
+     *
      * @see Injector
      * @see WOInjectModule
      */
@@ -117,10 +117,11 @@ public abstract class InjectableApplication extends ERXApplication {
     /**
      * Obtain the <code>Stage</code> in which the application is running. This
      * stage is to be used by the injector.
-     * 
-     * Override this method to inform
-     * 
-     * @return
+     *
+     * Override this method to inform the stage in which the application is
+     * running
+     *
+     * @return The stage in which the application is running
      * @see Stage
      */
     protected Stage stage() {

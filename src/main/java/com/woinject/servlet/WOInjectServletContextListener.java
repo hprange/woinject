@@ -29,18 +29,20 @@ import javax.servlet.ServletContextListener;
 import com.woinject.WOInject;
 
 /**
+ * <p>
  * The <code>WOInjectServletContextListener</code> initializes the WOInject
  * framework in the context of servlet applications. It's important to
  * initialize WOInject very early in the context of a servlet application.
  * Remember to add the listener in the first place on the web.xml descriptor.
+ * </p>
  * <p>
  * Add the following snippet into the web.xml:
- * <p>
+ * </p>
  *
  * <pre>
- * 	&lt;listener&gt;
- * 		&lt;listener-class&gt;com.woinject.servlet.WOInjectServletContextListener&lt;/listener-class&gt;
- * 	&lt;/listener&gt;
+ * &lt;listener&gt;
+ * 	&lt;listener-class&gt;com.woinject.servlet.WOInjectServletContextListener&lt;/listener-class&gt;
+ * &lt;/listener&gt;
  * </pre>
  *
  * @author <a href="mailto:hprange@gmail.com.br">Henrique Prange</a>
@@ -76,8 +78,7 @@ public class WOInjectServletContextListener implements ServletContextListener {
     /**
      * Remove the WOInject marker associated with this context.
      *
-     * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.
-     *      ServletContextEvent)
+     * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
     public void contextDestroyed(ServletContextEvent event) {
 	ServletContext servletContext = event.getServletContext();
