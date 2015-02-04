@@ -62,7 +62,7 @@ public class WOInjectServletContextListener implements ServletContextListener {
 	    method.setAccessible(true);
 
 	    try {
-		Object[] args = new Object[] { classname, bytes, new Integer(0), new Integer(bytes.length) };
+		Object[] args = new Object[] { classname, bytes, 0, bytes.length };
 
 		clazz = (Class<?>) method.invoke(loader, args);
 	    } finally {

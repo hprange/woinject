@@ -145,7 +145,7 @@ class InstantiationInterceptor {
 	if (!(WOSession.class.isAssignableFrom(type) || WOComponent.class.isAssignableFrom(type) || EOEnterpriseObject.class.isAssignableFrom(type) || WODirectAction.class.isAssignableFrom(type))) {
 	    T object = instantiateObjectByReflection(type, constructor, parameters, shouldThrow, shouldLog);
 
-	    if (injector != null && object != null) {
+	    if (object != null) {
 		injector.injectMembers(object);
 	    }
 
