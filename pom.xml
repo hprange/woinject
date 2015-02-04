@@ -59,12 +59,12 @@
 			<plugins>
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.0</version>
+					<version>3.4</version>
 					<configuration>
 						<reportPlugins>
 							<plugin>
 								<artifactId>maven-project-info-reports-plugin</artifactId>
-								<version>2.4</version>
+								<version>2.8</version>
 								<configuration>
 									<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
 									<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
@@ -72,14 +72,14 @@
 							</plugin>
 							<plugin>
 								<artifactId>maven-javadoc-plugin</artifactId>
-								<version>2.8.1</version>
+								<version>2.10.1</version>
 								<configuration>
 									<detectLinks>true</detectLinks>
 								</configuration>
 							</plugin>
 							<plugin>
 								<artifactId>maven-jxr-plugin</artifactId>
-								<version>2.3</version>
+								<version>2.5</version>
 								<configuration>
 									<linkJavadoc>true</linkJavadoc>
 								</configuration>
@@ -87,11 +87,11 @@
 							<plugin>
 								<groupId>org.codehaus.mojo</groupId>
 								<artifactId>cobertura-maven-plugin</artifactId>
-								<version>2.5.1</version>
+								<version>2.6</version>
 							</plugin>
 							<plugin>
 								<artifactId>maven-pmd-plugin</artifactId>
-								<version>2.7.1</version>
+								<version>3.4</version>
 								<configuration>
 									<linkXref>true</linkXref>
 									<targetJdk>1.5</targetJdk>
@@ -99,12 +99,12 @@
 							</plugin>
 							<plugin>
 								<artifactId>maven-surefire-report-plugin</artifactId>
-								<version>2.12</version>
+								<version>2.18.1</version>
 							</plugin>
 							<plugin>
 								<groupId>org.codehaus.mojo</groupId>
 								<artifactId>findbugs-maven-plugin</artifactId>
-								<version>2.4.0</version>
+								<version>3.0.0</version>
 								<configuration>
 									<xmlOutput>true</xmlOutput>
 									<effort>Max</effort>
