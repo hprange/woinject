@@ -21,9 +21,9 @@
 		<a href="http://github.com/hprange/woinject"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
 		<div id="container">
 			<div class="download">
-				<a href="https://github.com/hprange/woinject/archive/woinject-1.1.zip">
+				<a href="https://github.com/hprange/woinject/archive/woinject-1.2.zip">
 					<img border="0" width="90" src="images/zip.png" alt="" /></a>
-				<a href="https://github.com/hprange/woinject/releases/download/woinject-1.1/woinject-1.1-bin.zip">
+				<a href="https://github.com/hprange/woinject/releases/download/woinject-1.2/woinject-1.2-bin.zip">
 					<img border="0" width="90" src="images/jar.png" alt="" /></a>
 			</div>
 			<h1><a href="index.html"><img border="0" src="images/woinject.png" alt="" /></a></h1>
@@ -35,7 +35,7 @@
 				WOInject is an extension of the Google Guice framework created to enable the use of dependency injection with WebObjects applications and frameworks. Dependency injection (DI) is a useful technique for program modularization leading to more testable code. WOInject allows to write better APIs and decoupled code reducing the hurdle of wiring things together.
 			</p>
 			<p>
-				<a href="http://code.google.com/p/google-guice/" target="_blank">Google Guice</a> is a lightweight framework for dependency injection. Its key features include type safe binding configuration, scopes and basic AOP. If you're not familiar with Guice, check the <a href="http://code.google.com/p/google-guice/wiki/Motivation" target="_blank"> Guice's User Guide</a>, the <a href="http://www.youtube.com/watch?v=FFXhXZnmEQM" target="_blank">Bob Lee talk</a> and <a href="http://www.youtube.com/watch?v=hBVJbzAagfs&feature=player_embedded" target="_blank">Dhanji Prasanna presentation</a>. If you want a complete reference on the subject, read the <a href="http://manning.com/prasanna/" target="_blank">Dependency Injection book</a> from Dhanji Prasanna. 
+				<a href="http://code.google.com/p/google-guice/" target="_blank">Google Guice</a> is a lightweight framework for dependency injection. Its key features include type safe binding configuration, scopes and basic AOP. If you're not familiar with Guice, check the <a href="http://code.google.com/p/google-guice/wiki/Motivation" target="_blank"> Guice's User Guide</a>, the <a href="http://www.youtube.com/watch?v=FFXhXZnmEQM" target="_blank">Bob Lee talk</a> and <a href="http://www.youtube.com/watch?v=hBVJbzAagfs&feature=player_embedded" target="_blank">Dhanji Prasanna presentation</a>. If you want a complete reference on the subject, read the <a href="http://manning.com/prasanna/" target="_blank">Dependency Injection book</a> from Dhanji Prasanna.
 			</p>
 			<h2>Why Dependency Injection?</h2>
 			<p>
@@ -84,11 +84,11 @@ public class MyModule extends AbstractModule {
 	protected void configure() {
 		bind(Formatter.class).to(NotThreadSafeFormatter.class)
 			.in(WORequestScoped.class);
-		
+
 		bind(Config.class).to(ConfigImpl.class)
 			.in(WOSessionScoped.class);
 	}
-}</pre>	
+}</pre>
 			<p>
 				Alternatively, it's possible to specify the scope for a type by applying the scope annotation to the implementation class directly (line 1).
 			</p>
@@ -130,7 +130,7 @@ Guice has the concept of Stages. WOInject maps the Development and the Productio
 				If there is one assertion we can make about under development software is that requirements change over time.
 			</p>
 			<p>
-				When the application is first defined, the client decides 
+				When the application is first defined, the client decides
 			</p>
 			<p>
 				WOInject and Guice are not a requirement to program to interfaces and to apply  dependency injection. However, these tools simplify the process of wiring interfaces to their respective implementations. When there is the need for a new implementation of one interface, only one line of code has to be modified to spread the change over the entire system.
@@ -140,12 +140,12 @@ Guice has the concept of Stages. WOInject maps the Development and the Productio
 				How one can get the user logged in the session from an Enterprise Object without tying it to the session class?
 			</p>
 			<p>
-				There are a few options: use a <code>ThreadLocal</code>, use the <code>WOSession.valueForKey</code> method, or inject the user into the EO. 
+				There are a few options: use a <code>ThreadLocal</code>, use the <code>WOSession.valueForKey</code> method, or inject the user into the EO.
 			</p>
 			<p>
 				Sample code: provider that receives the current session and return the user.
 			</p>
-			<p>				
+			<p>
 				This approach has the following benefits:
 			</p>
 			<ol>
