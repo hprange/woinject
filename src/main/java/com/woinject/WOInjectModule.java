@@ -17,7 +17,6 @@
 package com.woinject;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Provider;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.webobjects.appserver.WOContext;
@@ -34,32 +33,6 @@ import er.extensions.appserver.ERXWOContext;
  * @since 1.0
  */
 public class WOInjectModule extends AbstractModule {
-    /**
-     * This class provides the current session object or throws an exception if
-     * unable to get it.
-     * 
-     * @param <T>
-     *            The session class type.
-     * @since 1.0
-     */
-    static class SessionProvider<T extends WOSession> implements Provider<T> {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.inject.Provider#get()
-	 */
-	public T get() {
-	    @SuppressWarnings("unchecked")
-	    T session = (T) ERXSession.session();
-
-	    if (session == null) {
-		throw new WOInjectException("Unable to provide the current session. Either the session has not been initialized yet, or it has expired.");
-	    }
-
-	    return session;
-	}
-    }
-
     private final Class<? extends WOSession> sessionClass;
 
     public WOInjectModule(Class<? extends WOSession> sessionClass) {
@@ -79,11 +52,11 @@ public class WOInjectModule extends AbstractModule {
 	@SuppressWarnings("unchecked")
 	Class<WOSession> sessionClass = (Class<WOSession>) this.sessionClass;
 
-	bind(sessionClass).annotatedWith(Current.class).toProvider(new TypeLiteral<SessionProvider<WOSession>>() {
+	bind(sessionClass).annotatedWith(Current.class).toProvider(new TypeLiteral<WOSessionProvider<WOSession>>() {
 	});
-	bind(ERXSession.class).annotatedWith(Current.class).toProvider(new TypeLiteral<SessionProvider<ERXSession>>() {
+	bind(ERXSession.class).annotatedWith(Current.class).toProvider(new TypeLiteral<WOSessionProvider<ERXSession>>() {
 	});
-	bind(WOSession.class).annotatedWith(Current.class).toProvider(new TypeLiteral<SessionProvider<WOSession>>() {
+	bind(WOSession.class).annotatedWith(Current.class).toProvider(new TypeLiteral<WOSessionProvider<WOSession>>() {
 	});
     }
 

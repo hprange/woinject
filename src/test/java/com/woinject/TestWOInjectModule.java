@@ -21,6 +21,7 @@ import static org.junit.Assert.assertThat;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,6 +54,22 @@ public class TestWOInjectModule {
     private StubSession mockSession;
 
     private Map<Class<? extends Annotation>, Scope> scopes;
+
+    @Before
+    public void setup() {
+        injector = Guice.createInjector(new WOInjectModule(StubSession.class));
+
+        scopes = injector.getScopeBindings();
+
+        ERXWOContext.setCurrentContext(mockContext);
+        ERXSession.setSession(mockSession);
+    }
+
+    @After
+    public void tearDown() {
+        ERXWOContext.setCurrentContext(null);
+        ERXSession.setSession(null);
+    }
 
     @Test
     public void bindCurrentContextProvider() throws Exception {
@@ -105,18 +122,8 @@ public class TestWOInjectModule {
 
     @Test(expected = ProvisionException.class)
     public void exceptionIfProvidingNullSession() throws Exception {
-	ERXSession.setSession(null);
+        ERXSession.setSession(null);
 
-	injector.getInstance(Key.get(ERXSession.class, Current.class));
-    }
-
-    @Before
-    public void setup() {
-	injector = Guice.createInjector(new WOInjectModule(StubSession.class));
-
-	scopes = injector.getScopeBindings();
-
-	ERXWOContext.setCurrentContext(mockContext);
-	ERXSession.setSession(mockSession);
+        injector.getInstance(Key.get(ERXSession.class, Current.class));
     }
 }
