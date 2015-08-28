@@ -59,38 +59,38 @@ import com.woinject.stubs.StubSession;
 @RunWith(MockitoJUnitRunner.class)
 public class TestInstantiationInterceptor extends AbstractInjectableTestCase {
     private static class StubInterceptor implements MethodInterceptor {
-	int invocations = 0;
+        int invocations = 0;
 
-	public Object invoke(MethodInvocation invocation) throws Throwable {
-	    invocations++;
+        public Object invoke(MethodInvocation invocation) throws Throwable {
+            invocations++;
 
-	    return invocation.proceed();
-	}
+            return invocation.proceed();
+        }
 
-	public void reset() {
-	    invocations = 0;
-	}
+        public void reset() {
+            invocations = 0;
+        }
     }
 
     private static class StubModule extends AbstractModule {
-	private final MethodInterceptor interceptor;
+        private final MethodInterceptor interceptor;
 
-	public StubModule(MethodInterceptor interceptor) {
-	    this.interceptor = interceptor;
-	}
+        public StubModule(MethodInterceptor interceptor) {
+            this.interceptor = interceptor;
+        }
 
-	@Override
-	protected void configure() {
-	    bind(String.class).annotatedWith(Names.named("test")).toInstance("expectedText");
-	    bind(StubObjectForBinding.class).toInstance(mock(StubObjectForBinding.class));
+        @Override
+        protected void configure() {
+            bind(String.class).annotatedWith(Names.named("test")).toInstance("expectedText");
+            bind(StubObjectForBinding.class).toInstance(mock(StubObjectForBinding.class));
 
-	    bindInterceptor(Matchers.any(), Matchers.any(), interceptor);
-	}
+            bindInterceptor(Matchers.any(), Matchers.any(), interceptor);
+        }
     }
 
     static class StubObjectForBinding {
-	public StubObjectForBinding() {
-	}
+        public StubObjectForBinding() {
+        }
     }
 
     private StubInterceptor interceptor;
@@ -108,187 +108,187 @@ public class TestInstantiationInterceptor extends AbstractInjectableTestCase {
 
     @Test
     public void bindInterceptorToSpecialObjectsWithConstructorUsingGuice() throws Throwable {
-	for (Object[] parameter : parameters) {
-	    @SuppressWarnings("unchecked")
-	    Object result = InstantiationInterceptor.instantiateObject((Constructor<Object>) parameter[3], (Class<Object>) parameter[0], (Object[]) parameter[2], true, false);
+        for (Object[] parameter : parameters) {
+            @SuppressWarnings("unchecked")
+            Object result = InstantiationInterceptor.instantiateObject((Constructor<Object>) parameter[3], (Class<Object>) parameter[0], (Object[]) parameter[2], true, false);
 
-	    interceptor.reset();
+            interceptor.reset();
 
-	    result.toString();
+            result.toString();
 
-	    assertThat(interceptor.invocations, is(1));
-	}
+            assertThat(interceptor.invocations, is(1));
+        }
     }
 
     @Test
     public void bindInterceptorToSpecialObjectsWithGuice() throws Throwable {
-	for (Object[] parameter : parameters) {
-	    Object result = InstantiationInterceptor.instantiateObject((Class<?>) parameter[0], (Class<?>[]) parameter[1], (Object[]) parameter[2], true, false);
+        for (Object[] parameter : parameters) {
+            Object result = InstantiationInterceptor.instantiateObject((Class<?>) parameter[0], (Class<?>[]) parameter[1], (Object[]) parameter[2], true, false);
 
-	    interceptor.reset();
+            interceptor.reset();
 
-	    result.toString();
+            result.toString();
 
-	    assertThat(interceptor.invocations, is(1));
-	}
+            assertThat(interceptor.invocations, is(1));
+        }
     }
 
     @Test
     public void doNotThrowExceptionIfNotRequired() throws Exception {
-	try {
-	    InstantiationInterceptor.instantiateObject(StubComponent.class, new Class<?>[] { WOContext.class }, new Object[] { mockRequest }, false, true);
-	    InstantiationInterceptor.instantiateObject(StubObject.class, new Class<?>[] { String.class, String.class }, null, false, true);
-	    InstantiationInterceptor.instantiateObject(StubObject.class, null, null, false, true);
-	} catch (Exception exception) {
-	    exception.printStackTrace();
+        try {
+            InstantiationInterceptor.instantiateObject(StubComponent.class, new Class<?>[] { WOContext.class }, new Object[] { mockRequest }, false, true);
+            InstantiationInterceptor.instantiateObject(StubObject.class, new Class<?>[] { String.class, String.class }, null, false, true);
+            InstantiationInterceptor.instantiateObject(StubObject.class, null, null, false, true);
+        } catch (Exception exception) {
+            exception.printStackTrace();
 
-	    fail("Should not throw an exception");
-	}
+            fail("Should not throw an exception");
+        }
     }
 
     @Test
     public void injectOrdinaryObjectMembersAfterConstructionWithReflection() throws Exception {
-	Object result = InstantiationInterceptor.instantiateObject(StubObject.class, new Class<?>[] { String.class, String.class }, new Object[] { "teste", "teste2" }, true, false);
+        Object result = InstantiationInterceptor.instantiateObject(StubObject.class, new Class<?>[] { String.class, String.class }, new Object[] { "teste", "teste2" }, true, false);
 
-	assertThat(result, notNullValue());
-	assertThat(result, instanceOf(StubObject.class));
-	assertThat(result.toString(), is("expectedText"));
+        assertThat(result, notNullValue());
+        assertThat(result, instanceOf(StubObject.class));
+        assertThat(result.toString(), is("expectedText"));
     }
 
     @Test
     public void injectOrdinaryObjectMembersAfterConstructionWithReflectionUsingConstructor() throws Exception {
-	Constructor<StubObject> constructor = StubObject.class.getConstructor(new Class<?>[] { String.class, String.class });
+        Constructor<StubObject> constructor = StubObject.class.getConstructor(new Class<?>[] { String.class, String.class });
 
-	Object result = InstantiationInterceptor.instantiateObject(constructor, StubObject.class, new Object[] { "teste", "teste2" }, true, false);
+        Object result = InstantiationInterceptor.instantiateObject(constructor, StubObject.class, new Object[] { "teste", "teste2" }, true, false);
 
-	assertThat(result, notNullValue());
-	assertThat(result, instanceOf(StubObject.class));
-	assertThat(result.toString(), is("expectedText"));
+        assertThat(result, notNullValue());
+        assertThat(result, instanceOf(StubObject.class));
+        assertThat(result.toString(), is("expectedText"));
     }
 
     @Test
     public void injectSpecialObjectsWithConstructorUsingGuice() throws Exception {
-	for (Object[] parameter : parameters) {
-	    @SuppressWarnings("unchecked")
-	    Object result = InstantiationInterceptor.instantiateObject((Constructor<Object>) parameter[3], (Class<Object>) parameter[0], (Object[]) parameter[2], true, false);
+        for (Object[] parameter : parameters) {
+            @SuppressWarnings("unchecked")
+            Object result = InstantiationInterceptor.instantiateObject((Constructor<Object>) parameter[3], (Class<Object>) parameter[0], (Object[]) parameter[2], true, false);
 
-	    assertThat(result.toString(), is("expectedText"));
-	}
+            assertThat(result.toString(), is("expectedText"));
+        }
     }
 
     @Test
     public void injectSpecialObjectsWithGuice() throws Exception {
-	for (Object[] parameter : parameters) {
-	    Object result = InstantiationInterceptor.instantiateObject((Class<?>) parameter[0], (Class<?>[]) parameter[1], (Object[]) parameter[2], true, false);
+        for (Object[] parameter : parameters) {
+            Object result = InstantiationInterceptor.instantiateObject((Class<?>) parameter[0], (Class<?>[]) parameter[1], (Object[]) parameter[2], true, false);
 
-	    assertThat(result.toString(), is("expectedText"));
-	}
+            assertThat(result.toString(), is("expectedText"));
+        }
     }
 
     @Test
     public void instantiateObjectWithContructorUsingReflectionIfInjectorIsNull() throws Exception {
-	application.setReturnNullInjector(true);
+        application.setReturnNullInjector(true);
 
-	Constructor<StubEnterpriseObject> constructor = StubEnterpriseObject.class.getConstructor();
+        Constructor<StubEnterpriseObject> constructor = StubEnterpriseObject.class.getConstructor();
 
-	StubEnterpriseObject result = InstantiationInterceptor.instantiateObject(constructor, StubEnterpriseObject.class, null, true, false);
+        StubEnterpriseObject result = InstantiationInterceptor.instantiateObject(constructor, StubEnterpriseObject.class, null, true, false);
 
-	assertThat(result, notNullValue());
-	assertThat(result, instanceOf(StubEnterpriseObject.class));
+        assertThat(result, notNullValue());
+        assertThat(result, instanceOf(StubEnterpriseObject.class));
     }
 
     @Test
     public void instantiateObjectWithReflectionIfApplicationIsNull() throws Exception {
-	StubApplication.setApplication(null);
+        StubApplication.setApplication(null);
 
-	StubEnterpriseObject result = InstantiationInterceptor.instantiateObject(StubEnterpriseObject.class, null, null, true, false);
+        StubEnterpriseObject result = InstantiationInterceptor.instantiateObject(StubEnterpriseObject.class, null, null, true, false);
 
-	assertThat(result, notNullValue());
-	assertThat(result, instanceOf(StubEnterpriseObject.class));
+        assertThat(result, notNullValue());
+        assertThat(result, instanceOf(StubEnterpriseObject.class));
     }
 
     @Test
     public void instantiateObjectWithReflectionIfInjectorIsNull() throws Exception {
-	application.setReturnNullInjector(true);
+        application.setReturnNullInjector(true);
 
-	StubEnterpriseObject result = InstantiationInterceptor.instantiateObject(StubEnterpriseObject.class, null, null, true, false);
+        StubEnterpriseObject result = InstantiationInterceptor.instantiateObject(StubEnterpriseObject.class, null, null, true, false);
 
-	assertThat(result, notNullValue());
-	assertThat(result, instanceOf(StubEnterpriseObject.class));
+        assertThat(result, notNullValue());
+        assertThat(result, instanceOf(StubEnterpriseObject.class));
     }
 
     @Test
     public void instantiateSpecialObjectsWithConstructorUsingGuice() throws Exception {
-	for (Object[] parameter : parameters) {
-	    @SuppressWarnings("unchecked")
-	    Object result = InstantiationInterceptor.instantiateObject((Constructor<Object>) parameter[3], (Class<Object>) parameter[0], (Object[]) parameter[2], true, false);
+        for (Object[] parameter : parameters) {
+            @SuppressWarnings("unchecked")
+            Object result = InstantiationInterceptor.instantiateObject((Constructor<Object>) parameter[3], (Class<Object>) parameter[0], (Object[]) parameter[2], true, false);
 
-	    assertThat(result, notNullValue());
-	    assertThat(result, instanceOf((Class<?>) parameter[0]));
-	}
+            assertThat(result, notNullValue());
+            assertThat(result, instanceOf((Class<?>) parameter[0]));
+        }
     }
 
     @Test
     public void instantiateSpecialObjectsWithGuice() throws Exception {
-	for (Object[] parameter : parameters) {
-	    Object result = InstantiationInterceptor.instantiateObject((Class<?>) parameter[0], (Class<?>[]) parameter[1], (Object[]) parameter[2], true, false);
+        for (Object[] parameter : parameters) {
+            Object result = InstantiationInterceptor.instantiateObject((Class<?>) parameter[0], (Class<?>[]) parameter[1], (Object[]) parameter[2], true, false);
 
-	    assertThat(result, notNullValue());
-	    assertThat(result, instanceOf((Class<?>) parameter[0]));
-	}
+            assertThat(result, notNullValue());
+            assertThat(result, instanceOf((Class<?>) parameter[0]));
+        }
     }
 
     @Override
     @Before
     public void setup() throws Exception {
-	final StubInterceptor interceptor = new StubInterceptor();
+        final StubInterceptor interceptor = new StubInterceptor();
 
-	this.interceptor = interceptor;
+        this.interceptor = interceptor;
 
-	application = new StubApplication() {
-	    @Override
-	    protected Module[] modules() {
-		List<Module> modules = new ArrayList<Module>(Arrays.asList(super.modules()));
+        application = new StubApplication() {
+            @Override
+            protected Module[] modules() {
+                List<Module> modules = new ArrayList<Module>(Arrays.asList(super.modules()));
 
-		modules.add(new StubModule(interceptor));
+                modules.add(new StubModule(interceptor));
 
-		return modules.toArray(new Module[modules.size()]);
-	    }
-	};
+                return modules.toArray(new Module[modules.size()]);
+            }
+        };
 
-	parameters = new Object[][] { { StubEnterpriseObject.class, null, null, StubEnterpriseObject.class.getConstructor() }, { StubComponent.class, new Class<?>[] { WOContext.class }, new Object[] { mockContext }, StubComponent.class.getConstructor(new Class<?>[] { WOContext.class }) }, { StubSession.class, null, null, StubSession.class.getConstructor() }, { StubDirectAction.class, new Class<?>[] { WORequest.class }, new Object[] { mockRequest }, StubDirectAction.class.getConstructor(new Class<?>[] { WORequest.class }) } };
+        parameters = new Object[][] { { StubEnterpriseObject.class, null, null, StubEnterpriseObject.class.getConstructor() }, { StubComponent.class, new Class<?>[] { WOContext.class }, new Object[] { mockContext }, StubComponent.class.getConstructor(new Class<?>[] { WOContext.class }) }, { StubSession.class, null, null, StubSession.class.getConstructor() }, { StubDirectAction.class, new Class<?>[] { WORequest.class }, new Object[] { mockRequest }, StubDirectAction.class.getConstructor(new Class<?>[] { WORequest.class }) } };
     }
 
     @Test
     public void throwExceptionIfGuiceUnableToCreateInstance() throws Exception {
-	thrown.expect(WOInjectException.class);
-	thrown.expectMessage(is("The instantiation of com.woinject.stubs.StubComponent class has failed."));
+        thrown.expect(WOInjectException.class);
+        thrown.expectMessage(is("The instantiation of com.woinject.stubs.StubComponent class has failed."));
 
-	WORequest illegalArgument = mockRequest;
+        WORequest illegalArgument = mockRequest;
 
-	InstantiationInterceptor.instantiateObject(StubComponent.class, new Class<?>[] { WOContext.class }, new Object[] { illegalArgument }, true, false);
+        InstantiationInterceptor.instantiateObject(StubComponent.class, new Class<?>[] { WOContext.class }, new Object[] { illegalArgument }, true, false);
     }
 
     @Test
     public void throwExceptionIfIllegalArguments() throws Exception {
-	thrown.expect(WOInjectException.class);
-	thrown.expectMessage(is("The instantiation of com.woinject.stubs.StubObject class has failed."));
+        thrown.expect(WOInjectException.class);
+        thrown.expectMessage(is("The instantiation of com.woinject.stubs.StubObject class has failed."));
 
-	InstantiationInterceptor.instantiateObject(StubObject.class, new Class<?>[] { String.class, String.class }, null, true, false);
+        InstantiationInterceptor.instantiateObject(StubObject.class, new Class<?>[] { String.class, String.class }, null, true, false);
     }
 
     @Test
     public void throwExceptionIfNoSuitableConstructorFound() throws Exception {
-	thrown.expect(WOInjectException.class);
-	thrown.expectMessage(is("The instantiation of com.woinject.stubs.StubObject class has failed."));
+        thrown.expect(WOInjectException.class);
+        thrown.expectMessage(is("The instantiation of com.woinject.stubs.StubObject class has failed."));
 
-	InstantiationInterceptor.instantiateObject(StubObject.class, null, null, true, false);
+        InstantiationInterceptor.instantiateObject(StubObject.class, null, null, true, false);
     }
 
     @Test
     public void useSpecialKeyToAvoidBindingConflictsWithParentInjector() throws Exception {
-	StubObjectForBinding result = InstantiationInterceptor.instantiateObject(StubObjectForBinding.class, null, null, false, false);
+        StubObjectForBinding result = InstantiationInterceptor.instantiateObject(StubObjectForBinding.class, null, null, false, false);
 
-	assertThat(new MockUtil().isMock(result), is(false));
+        assertThat(new MockUtil().isMock(result), is(false));
     }
 }

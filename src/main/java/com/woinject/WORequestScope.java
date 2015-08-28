@@ -37,7 +37,7 @@ class WORequestScope implements Scope {
     }
 
     WORequest request() {
-	return ERXWOContext.currentContext().request();
+        return ERXWOContext.currentContext().request();
     }
 
     /*
@@ -47,35 +47,35 @@ class WORequestScope implements Scope {
      * com.google.inject.Provider)
      */
     public <T> Provider<T> scope(final Key<T> key, final Provider<T> creator) {
-	final String name = key.toString();
+        final String name = key.toString();
 
-	return new Provider<T>() {
-	    public T get() {
-		WORequest request = request();
+        return new Provider<T>() {
+            public T get() {
+                WORequest request = request();
 
-		if (request == null) {
-		    throw new OutOfScopeException("Cannot access scoped object. Either the request has not been dispatched yet, or its cycle has ended.");
-		}
+                if (request == null) {
+                    throw new OutOfScopeException("Cannot access scoped object. Either the request has not been dispatched yet, or its cycle has ended.");
+                }
 
-		synchronized (request) {
-		    Object object = request.userInfoForKey(name);
+                synchronized (request) {
+                    Object object = request.userInfoForKey(name);
 
-		    if (object == NullValue) {
-			return null;
-		    }
+                    if (object == NullValue) {
+                        return null;
+                    }
 
-		    @SuppressWarnings("unchecked")
-		    T t = (T) object;
+                    @SuppressWarnings("unchecked")
+                    T t = (T) object;
 
-		    if (t == null) {
-			t = creator.get();
+                    if (t == null) {
+                        t = creator.get();
 
-			request.setUserInfoForKey(t == null ? NullValue : t, name);
-		    }
+                        request.setUserInfoForKey(t == null ? NullValue : t, name);
+                    }
 
-		    return t;
-		}
-	    }
-	};
+                    return t;
+                }
+            }
+        };
     }
 }

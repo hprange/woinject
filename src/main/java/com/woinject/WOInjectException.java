@@ -23,18 +23,18 @@ package com.woinject;
  */
 public class WOInjectException extends RuntimeException {
     public WOInjectException() {
-	super();
+        super();
     }
 
     public WOInjectException(String message) {
-	super(message);
+        super(message);
     }
 
     public WOInjectException(String message, Throwable cause) {
-	super(message, cause);
+        super(message, cause);
     }
 
     public WOInjectException(Throwable cause) {
-	super(cause);
+        super(cause);
     }
 }

@@ -44,7 +44,7 @@ import er.extensions.appserver.ERXApplication;
  */
 public abstract class InjectableApplication extends ERXApplication {
     public static InjectableApplication application() {
-	return (InjectableApplication) WOApplication.application();
+        return (InjectableApplication) WOApplication.application();
     }
 
     private final Injector injector;
@@ -58,11 +58,11 @@ public abstract class InjectableApplication extends ERXApplication {
      * @see Inject
      */
     public InjectableApplication() {
-	super();
+        super();
 
-	injector = createInjector();
+        injector = createInjector();
 
-	injector.injectMembers(this);
+        injector.injectMembers(this);
     }
 
     /**
@@ -80,15 +80,15 @@ public abstract class InjectableApplication extends ERXApplication {
      * @see WOInjectModule
      */
     protected Injector createInjector() {
-	List<Module> modules = new ArrayList<Module>();
+        List<Module> modules = new ArrayList<Module>();
 
-	@SuppressWarnings("unchecked")
-	Class<? extends WOSession> sessionClass = _sessionClass();
+        @SuppressWarnings("unchecked")
+        Class<? extends WOSession> sessionClass = _sessionClass();
 
-	modules.add(new WOInjectModule(sessionClass));
-	modules.addAll(Arrays.asList(modules()));
+        modules.add(new WOInjectModule(sessionClass));
+        modules.addAll(Arrays.asList(modules()));
 
-	return Guice.createInjector(stage(), modules);
+        return Guice.createInjector(stage(), modules);
     }
 
     /**
@@ -97,7 +97,7 @@ public abstract class InjectableApplication extends ERXApplication {
      * @return The injector created during this application initialization
      */
     public Injector injector() {
-	return injector;
+        return injector;
     }
 
     /**
@@ -111,7 +111,7 @@ public abstract class InjectableApplication extends ERXApplication {
      * @see Module
      */
     protected Module[] modules() {
-	return new Module[] {};
+        return new Module[] {};
     }
 
     /**
@@ -125,6 +125,6 @@ public abstract class InjectableApplication extends ERXApplication {
      * @see Stage
      */
     protected Stage stage() {
-	return isDevelopmentMode() ? Stage.DEVELOPMENT : Stage.PRODUCTION;
+        return isDevelopmentMode() ? Stage.DEVELOPMENT : Stage.PRODUCTION;
     }
 }

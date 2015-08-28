@@ -44,74 +44,74 @@ public class TestWOSessionScope extends AbstractScopeTestCase<WOSessionScope> {
 
     @Test
     public void createAndSaveObjectOnFirstCall() throws Exception {
-	Provider<Object> result = scope.scope(mockKey, mockCreator);
+        Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-	assertThat(result.get(), is(mockObject));
+        assertThat(result.get(), is(mockObject));
 
-	Mockito.verify(mockCreator).get();
-	Mockito.verify(mockSession).setObjectForKey(mockObject, KEY_NAME);
+        Mockito.verify(mockCreator).get();
+        Mockito.verify(mockSession).setObjectForKey(mockObject, KEY_NAME);
     }
 
     @Test
     public void exceptionIfSessionIsNotAvailable() throws Exception {
-	doReturn(null).when(scope).session();
+        doReturn(null).when(scope).session();
 
-	Provider<Object> result = scope.scope(mockKey, mockCreator);
+        Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-	thrown.expect(OutOfScopeException.class);
-	thrown.expectMessage(is("Cannot access scoped object. Either the session has not been initialized yet, or it has expired."));
+        thrown.expect(OutOfScopeException.class);
+        thrown.expectMessage(is("Cannot access scoped object. Either the session has not been initialized yet, or it has expired."));
 
-	result.get();
+        result.get();
     }
 
     @Test
     public void retrieveTheSameObjectOnSubsequentCalls() throws Exception {
-	for (int i = 0; i < 10; i++) {
-	    Provider<Object> result = scope.scope(mockKey, mockCreator);
+        for (int i = 0; i < 10; i++) {
+            Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-	    assertThat(result.get(), is(mockObject));
-	}
+            assertThat(result.get(), is(mockObject));
+        }
 
-	Mockito.verify(mockCreator, Mockito.times(1)).get();
-	Mockito.verify(mockSession, Mockito.times(1)).setObjectForKey(mockObject, KEY_NAME);
+        Mockito.verify(mockCreator, Mockito.times(1)).get();
+        Mockito.verify(mockSession, Mockito.times(1)).setObjectForKey(mockObject, KEY_NAME);
     }
 
     @Test
     public void returnNullOnSubsequentCalls() throws Exception {
-	Mockito.when(mockSession.objectForKey(KEY_NAME)).thenReturn(null, NSKeyValueCoding.NullValue);
-	Mockito.when(mockCreator.get()).thenReturn(null);
+        Mockito.when(mockSession.objectForKey(KEY_NAME)).thenReturn(null, NSKeyValueCoding.NullValue);
+        Mockito.when(mockCreator.get()).thenReturn(null);
 
-	for (int i = 0; i < 10; i++) {
-	    Provider<Object> result = scope.scope(mockKey, mockCreator);
+        for (int i = 0; i < 10; i++) {
+            Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-	    assertThat(result.get(), nullValue());
-	}
+            assertThat(result.get(), nullValue());
+        }
 
-	Mockito.verify(mockCreator, Mockito.times(1)).get();
-	Mockito.verify(mockSession, Mockito.times(1)).setObjectForKey(NSKeyValueCoding.NullValue, KEY_NAME);
+        Mockito.verify(mockCreator, Mockito.times(1)).get();
+        Mockito.verify(mockSession, Mockito.times(1)).setObjectForKey(NSKeyValueCoding.NullValue, KEY_NAME);
     }
 
     @Test
     public void setNullValueIfProvidesReturnsNull() throws Exception {
-	Mockito.when(mockCreator.get()).thenReturn(null);
+        Mockito.when(mockCreator.get()).thenReturn(null);
 
-	Provider<Object> result = scope.scope(mockKey, mockCreator);
+        Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-	assertThat(result.get(), nullValue());
+        assertThat(result.get(), nullValue());
 
-	Mockito.verify(mockSession).setObjectForKey(NSKeyValueCoding.NullValue, KEY_NAME);
+        Mockito.verify(mockSession).setObjectForKey(NSKeyValueCoding.NullValue, KEY_NAME);
     }
 
     @Before
     public void setup() {
-	scope = Mockito.spy(new WOSessionScope());
+        scope = Mockito.spy(new WOSessionScope());
 
-	Mockito.doReturn(mockSession).when(scope).session();
+        Mockito.doReturn(mockSession).when(scope).session();
 
-	mockKey = Key.get(Object.class);
+        mockKey = Key.get(Object.class);
 
-	Mockito.when(mockSession.objectForKey(KEY_NAME)).thenReturn(null, mockObject);
+        Mockito.when(mockSession.objectForKey(KEY_NAME)).thenReturn(null, mockObject);
 
-	Mockito.when(mockCreator.get()).thenReturn(mockObject);
+        Mockito.when(mockCreator.get()).thenReturn(mockObject);
     }
 }

@@ -37,58 +37,58 @@ public class TestInjectableApplication extends AbstractInjectableTestCase {
 
     @Test
     public void appendAndLoadStubModuleOnInjectorInitialization() throws Exception {
-	assertThat(((StubApplication) application).stubModuleWasLoaded(), is(true));
+        assertThat(((StubApplication) application).stubModuleWasLoaded(), is(true));
     }
 
     @Test
     public void createAnInjectorOnApplicationInitialization() throws Exception {
-	assertThat(application.injector(), notNullValue());
+        assertThat(application.injector(), notNullValue());
     }
 
     @Test
     public void injectApplicationFields() throws Exception {
-	assertThat(((StubApplication) application).getInjectableField(), is("fieldInjected"));
+        assertThat(((StubApplication) application).getInjectableField(), is("fieldInjected"));
     }
 
     @Test
     public void injectApplicationMethods() throws Exception {
-	assertThat(((StubApplication) application).getInjectableMethod(), is("methodInjected"));
+        assertThat(((StubApplication) application).getInjectableMethod(), is("methodInjected"));
     }
 
     @Test
     public void loadWOInjectModuleAutomatically() throws Exception {
-	Injector injector = application.injector();
+        Injector injector = application.injector();
 
-	assertThat(injector.getScopeBindings().get(WOSessionScoped.class), notNullValue());
+        assertThat(injector.getScopeBindings().get(WOSessionScoped.class), notNullValue());
     }
 
     @Test
     public void setStageForDevelomentMode() throws Exception {
-	ERXProperties.setStringForKey("true", DEVELOPMENT_MODE_KEY);
+        ERXProperties.setStringForKey("true", DEVELOPMENT_MODE_KEY);
 
-	application = new StubApplication();
+        application = new StubApplication();
 
-	Stage stage = application.injector().getInstance(Stage.class);
+        Stage stage = application.injector().getInstance(Stage.class);
 
-	assertThat(stage, is(Stage.DEVELOPMENT));
+        assertThat(stage, is(Stage.DEVELOPMENT));
     }
 
     @Test
     public void setStageForProductionMode() throws Exception {
-	ERXProperties.setStringForKey("false", DEVELOPMENT_MODE_KEY);
+        ERXProperties.setStringForKey("false", DEVELOPMENT_MODE_KEY);
 
-	application = new StubApplication();
+        application = new StubApplication();
 
-	Stage stage = application.injector().getInstance(Stage.class);
+        Stage stage = application.injector().getInstance(Stage.class);
 
-	assertThat(stage, is(Stage.PRODUCTION));
+        assertThat(stage, is(Stage.PRODUCTION));
     }
 
     @Override
     @After
     public void tearDown() {
-	super.tearDown();
+        super.tearDown();
 
-	ERXProperties.removeKey(DEVELOPMENT_MODE_KEY);
+        ERXProperties.removeKey(DEVELOPMENT_MODE_KEY);
     }
 }

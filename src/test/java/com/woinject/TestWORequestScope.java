@@ -46,75 +46,75 @@ public class TestWORequestScope extends AbstractScopeTestCase<WORequestScope> {
 
     @Test
     public void createAndSaveObjectOnFirstCall() throws Exception {
-	Provider<Object> result = scope.scope(mockKey, mockCreator);
+        Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-	assertThat(result.get(), is(mockObject));
+        assertThat(result.get(), is(mockObject));
 
-	verify(mockCreator).get();
-	verify(mockRequest).setUserInfoForKey(mockObject, KEY_NAME);
+        verify(mockCreator).get();
+        verify(mockRequest).setUserInfoForKey(mockObject, KEY_NAME);
     }
 
     @Test
     public void exceptionIfSessionIsNotAvailable() throws Exception {
-	doReturn(null).when(scope).request();
+        doReturn(null).when(scope).request();
 
-	Provider<Object> result = scope.scope(mockKey, mockCreator);
+        Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-	thrown.expect(OutOfScopeException.class);
-	thrown.expectMessage(is("Cannot access scoped object. Either the request has not been dispatched yet, or its cycle has ended."));
+        thrown.expect(OutOfScopeException.class);
+        thrown.expectMessage(is("Cannot access scoped object. Either the request has not been dispatched yet, or its cycle has ended."));
 
-	result.get();
+        result.get();
     }
 
     @Test
     public void retrieveTheSameObjectOnSubsequentCalls() throws Exception {
-	for (int i = 0; i < 10; i++) {
-	    Provider<Object> result = scope.scope(mockKey, mockCreator);
+        for (int i = 0; i < 10; i++) {
+            Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-	    assertThat(result.get(), is(mockObject));
-	}
+            assertThat(result.get(), is(mockObject));
+        }
 
-	verify(mockCreator, times(1)).get();
-	verify(mockRequest, times(1)).setUserInfoForKey(mockObject, KEY_NAME);
+        verify(mockCreator, times(1)).get();
+        verify(mockRequest, times(1)).setUserInfoForKey(mockObject, KEY_NAME);
     }
 
     @Test
     public void returnNullOnSubsequentCalls() throws Exception {
-	when(mockRequest.userInfoForKey(KEY_NAME)).thenReturn(null, NSKeyValueCoding.NullValue);
-	when(mockCreator.get()).thenReturn(null);
+        when(mockRequest.userInfoForKey(KEY_NAME)).thenReturn(null, NSKeyValueCoding.NullValue);
+        when(mockCreator.get()).thenReturn(null);
 
-	for (int i = 0; i < 10; i++) {
-	    Provider<Object> result = scope.scope(mockKey, mockCreator);
+        for (int i = 0; i < 10; i++) {
+            Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-	    assertThat(result.get(), nullValue());
-	}
+            assertThat(result.get(), nullValue());
+        }
 
-	verify(mockCreator, times(1)).get();
-	verify(mockRequest, times(1)).setUserInfoForKey(NSKeyValueCoding.NullValue, KEY_NAME);
+        verify(mockCreator, times(1)).get();
+        verify(mockRequest, times(1)).setUserInfoForKey(NSKeyValueCoding.NullValue, KEY_NAME);
     }
 
     @Test
     public void setNullValueIfProvidesReturnsNull() throws Exception {
-	when(mockCreator.get()).thenReturn(null);
+        when(mockCreator.get()).thenReturn(null);
 
-	Provider<Object> result = scope.scope(mockKey, mockCreator);
+        Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-	assertThat(result.get(), nullValue());
+        assertThat(result.get(), nullValue());
 
-	verify(mockRequest).setUserInfoForKey(NSKeyValueCoding.NullValue, KEY_NAME);
+        verify(mockRequest).setUserInfoForKey(NSKeyValueCoding.NullValue, KEY_NAME);
     }
 
     @Before
     public void setup() {
-	scope = spy(new WORequestScope());
+        scope = spy(new WORequestScope());
 
-	doReturn(mockRequest).when(scope).request();
+        doReturn(mockRequest).when(scope).request();
 
-	mockKey = Key.get(Object.class);
+        mockKey = Key.get(Object.class);
 
-	when(mockRequest.userInfoForKey(KEY_NAME)).thenReturn(null, mockObject);
+        when(mockRequest.userInfoForKey(KEY_NAME)).thenReturn(null, mockObject);
 
-	when(mockCreator.get()).thenReturn(mockObject);
+        when(mockCreator.get()).thenReturn(mockObject);
 
     }
 }

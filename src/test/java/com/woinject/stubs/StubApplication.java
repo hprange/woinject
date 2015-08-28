@@ -32,27 +32,27 @@ import com.woinject.InjectableApplication;
  */
 public class StubApplication extends InjectableApplication {
     private static class StubModule extends AbstractModule {
-	private boolean moduleWasLoaded = false;
+        private boolean moduleWasLoaded = false;
 
-	@Override
-	protected void configure() {
-	    moduleWasLoaded = true;
+        @Override
+        protected void configure() {
+            moduleWasLoaded = true;
 
-	    bind(String.class).annotatedWith(Names.named("field")).toInstance("fieldInjected");
-	    bind(String.class).annotatedWith(Names.named("method")).toInstance("methodInjected");
-	}
+            bind(String.class).annotatedWith(Names.named("field")).toInstance("fieldInjected");
+            bind(String.class).annotatedWith(Names.named("method")).toInstance("methodInjected");
+        }
     }
 
     public static void setApplication(WOApplication application) {
-	try {
-	    Method method = WOApplication.class.getDeclaredMethod("_setApplication", WOApplication.class);
+        try {
+            Method method = WOApplication.class.getDeclaredMethod("_setApplication", WOApplication.class);
 
-	    method.setAccessible(true);
+            method.setAccessible(true);
 
-	    method.invoke(null, application);
-	} catch (Exception exception) {
-	    throw new RuntimeException(exception);
-	}
+            method.invoke(null, application);
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
+        }
     }
 
     @Inject
@@ -67,43 +67,43 @@ public class StubApplication extends InjectableApplication {
 
     @Override
     protected Class<StubSession> _sessionClass() {
-	return StubSession.class;
+        return StubSession.class;
     }
 
     public String getInjectableField() {
-	return injectableField;
+        return injectableField;
     }
 
     public String getInjectableMethod() {
-	return injectableMethod;
+        return injectableMethod;
     }
 
     @Inject
     public void initInjectableMethod(@Named("method") String value) {
-	injectableMethod = value;
+        injectableMethod = value;
     }
 
     @Override
     public Injector injector() {
-	if (nullInjector) {
-	    return null;
-	}
+        if (nullInjector) {
+            return null;
+        }
 
-	return super.injector();
+        return super.injector();
     }
 
     @Override
     protected Module[] modules() {
-	stubModule = new StubModule();
+        stubModule = new StubModule();
 
-	return new Module[] { stubModule };
+        return new Module[] { stubModule };
     }
 
     public void setReturnNullInjector(boolean nullInjector) {
-	this.nullInjector = nullInjector;
+        this.nullInjector = nullInjector;
     }
 
     public boolean stubModuleWasLoaded() {
-	return stubModule.moduleWasLoaded;
+        return stubModule.moduleWasLoaded;
     }
 }

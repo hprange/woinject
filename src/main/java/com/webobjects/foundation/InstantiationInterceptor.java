@@ -70,29 +70,29 @@ class InstantiationInterceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(InstantiationInterceptor.class);
 
     private static <T> Constructor<T> findConstructor(final Class<T> type, final Class<?>[] parameterTypes, boolean shouldThrow, boolean shouldLog) {
-	try {
-	    return type.getConstructor(parameterTypes);
-	} catch (Exception exception) {
-	    return handleException(type, exception, shouldThrow, shouldLog);
-	}
+        try {
+            return type.getConstructor(parameterTypes);
+        } catch (Exception exception) {
+            return handleException(type, exception, shouldThrow, shouldLog);
+        }
     }
 
     private static <T, N> N handleException(Class<T> type, Exception exception, boolean shouldThrow, boolean shouldLog) {
-	if (shouldLog) {
-	    LOGGER.error("The instantiation of " + type.getName() + " class has failed.", exception);
-	}
+        if (shouldLog) {
+            LOGGER.error("The instantiation of " + type.getName() + " class has failed.", exception);
+        }
 
-	if (!shouldThrow) {
-	    return null;
-	}
+        if (!shouldThrow) {
+            return null;
+        }
 
-	throw new WOInjectException("The instantiation of " + type.getName() + " class has failed.", exception);
+        throw new WOInjectException("The instantiation of " + type.getName() + " class has failed.", exception);
     }
 
     private static Injector injector() {
-	InjectableApplication application = InjectableApplication.application();
+        InjectableApplication application = InjectableApplication.application();
 
-	return application == null ? null : application.injector();
+        return application == null ? null : application.injector();
     }
 
     /**
@@ -111,13 +111,13 @@ class InstantiationInterceptor {
      * @see Injector#injectMembers(Object)
      */
     public static <T> T instantiateObject(final Class<T> type, final Class<?>[] parameterTypes, final Object[] parameters, boolean shouldThrow, boolean shouldLog) {
-	Constructor<T> constructor = findConstructor(type, parameterTypes, shouldThrow, shouldLog);
+        Constructor<T> constructor = findConstructor(type, parameterTypes, shouldThrow, shouldLog);
 
-	if (constructor == null) {
-	    return null;
-	}
+        if (constructor == null) {
+            return null;
+        }
 
-	return instantiateObject(constructor, type, parameters, shouldThrow, shouldLog);
+        return instantiateObject(constructor, type, parameters, shouldThrow, shouldLog);
     }
 
     /**
@@ -136,56 +136,56 @@ class InstantiationInterceptor {
      * @see Injector#injectMembers(Object)
      */
     public static <T> T instantiateObject(final Constructor<T> constructor, final Class<T> type, final Object[] parameters, boolean shouldThrow, boolean shouldLog) {
-	Injector injector = injector();
+        Injector injector = injector();
 
-	if (injector == null) {
-	    return instantiateObjectByReflection(type, constructor, parameters, shouldThrow, shouldLog);
-	}
+        if (injector == null) {
+            return instantiateObjectByReflection(type, constructor, parameters, shouldThrow, shouldLog);
+        }
 
-	if (!(WOSession.class.isAssignableFrom(type) || WOComponent.class.isAssignableFrom(type) || EOEnterpriseObject.class.isAssignableFrom(type) || WODirectAction.class.isAssignableFrom(type))) {
-	    T object = instantiateObjectByReflection(type, constructor, parameters, shouldThrow, shouldLog);
+        if (!(WOSession.class.isAssignableFrom(type) || WOComponent.class.isAssignableFrom(type) || EOEnterpriseObject.class.isAssignableFrom(type) || WODirectAction.class.isAssignableFrom(type))) {
+            T object = instantiateObjectByReflection(type, constructor, parameters, shouldThrow, shouldLog);
 
-	    if (object != null) {
-		injector.injectMembers(object);
-	    }
+            if (object != null) {
+                injector.injectMembers(object);
+            }
 
-	    return object;
-	}
+            return object;
+        }
 
-	Module woinjectModule = new AbstractModule() {
-	    @Override
-	    @SuppressWarnings({ "rawtypes", "unchecked" })
-	    protected void configure() {
-		Binder binder = binder().withSource(type);
+        Module woinjectModule = new AbstractModule() {
+            @Override
+            @SuppressWarnings({ "rawtypes", "unchecked" })
+            protected void configure() {
+                Binder binder = binder().withSource(type);
 
-		int i = 0;
+                int i = 0;
 
-		if (parameters != null) {
-		    for (Class<?> parameterType : constructor.getParameterTypes()) {
-			binder.bind(parameterType).toProvider((Provider) Providers.of(parameters[i++]));
-		    }
-		}
+                if (parameters != null) {
+                    for (Class<?> parameterType : constructor.getParameterTypes()) {
+                        binder.bind(parameterType).toProvider((Provider) Providers.of(parameters[i++]));
+                    }
+                }
 
-		binder.bind(Key.get(type, WOInjectBinding.class)).toConstructor(constructor).in(Scopes.NO_SCOPE);
-	    }
-	};
+                binder.bind(Key.get(type, WOInjectBinding.class)).toConstructor(constructor).in(Scopes.NO_SCOPE);
+            }
+        };
 
-	try {
-	    Injector forCreate = injector.createChildInjector(woinjectModule);
+        try {
+            Injector forCreate = injector.createChildInjector(woinjectModule);
 
-	    Binding<T> binding = forCreate.getBinding(Key.get(type, WOInjectBinding.class));
+            Binding<T> binding = forCreate.getBinding(Key.get(type, WOInjectBinding.class));
 
-	    return binding.getProvider().get();
-	} catch (Exception exception) {
-	    return handleException(type, exception, shouldThrow, shouldLog);
-	}
+            return binding.getProvider().get();
+        } catch (Exception exception) {
+            return handleException(type, exception, shouldThrow, shouldLog);
+        }
     }
 
     private static <T> T instantiateObjectByReflection(Class<T> type, Constructor<T> constructor, Object[] parameters, boolean shouldThrow, boolean shouldLog) {
-	try {
-	    return constructor.newInstance(parameters);
-	} catch (Exception exception) {
-	    return handleException(type, exception, shouldThrow, shouldLog);
-	}
+        try {
+            return constructor.newInstance(parameters);
+        } catch (Exception exception) {
+            return handleException(type, exception, shouldThrow, shouldLog);
+        }
     }
 }

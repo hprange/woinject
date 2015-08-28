@@ -52,27 +52,27 @@ public class WOInjectServletContextListener implements ServletContextListener {
     private static final String WOINJECT_MARKER_ATTRIBUTE = WOInject.class.getName();
 
     private static Class<?> loadClass(ClassLoader loader, String classname, byte[] bytes) {
-	Class<?> clazz = null;
+        Class<?> clazz = null;
 
-	try {
-	    Class<?> loaderClass = Class.forName("java.lang.ClassLoader");
+        try {
+            Class<?> loaderClass = Class.forName("java.lang.ClassLoader");
 
-	    Method method = loaderClass.getDeclaredMethod("defineClass", new Class[] { String.class, byte[].class, int.class, int.class });
+            Method method = loaderClass.getDeclaredMethod("defineClass", new Class[] { String.class, byte[].class, int.class, int.class });
 
-	    method.setAccessible(true);
+            method.setAccessible(true);
 
-	    try {
-		Object[] args = new Object[] { classname, bytes, 0, bytes.length };
+            try {
+                Object[] args = new Object[] { classname, bytes, 0, bytes.length };
 
-		clazz = (Class<?>) method.invoke(loader, args);
-	    } finally {
-		method.setAccessible(false);
-	    }
-	} catch (Exception exception) {
-	    throw new Error("Error while defining class.", exception);
-	}
+                clazz = (Class<?>) method.invoke(loader, args);
+            } finally {
+                method.setAccessible(false);
+            }
+        } catch (Exception exception) {
+            throw new Error("Error while defining class.", exception);
+        }
 
-	return clazz;
+        return clazz;
     }
 
     /**
@@ -81,9 +81,9 @@ public class WOInjectServletContextListener implements ServletContextListener {
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
     public void contextDestroyed(ServletContextEvent event) {
-	ServletContext servletContext = event.getServletContext();
+        ServletContext servletContext = event.getServletContext();
 
-	servletContext.removeAttribute(WOINJECT_MARKER_ATTRIBUTE);
+        servletContext.removeAttribute(WOINJECT_MARKER_ATTRIBUTE);
     }
 
     /**
@@ -93,37 +93,37 @@ public class WOInjectServletContextListener implements ServletContextListener {
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
      */
     public void contextInitialized(ServletContextEvent event) {
-	ServletContext context = event.getServletContext();
+        ServletContext context = event.getServletContext();
 
-	if (context.getAttribute(WOINJECT_MARKER_ATTRIBUTE) != null) {
-	    // WOInject has already been initialized in this context
-	    return;
-	}
+        if (context.getAttribute(WOINJECT_MARKER_ATTRIBUTE) != null) {
+            // WOInject has already been initialized in this context
+            return;
+        }
 
-	ClassPool pool = ClassPool.getDefault();
+        ClassPool pool = ClassPool.getDefault();
 
-	pool.insertClassPath(new ClassClassPath(WOInjectServletContextListener.class));
+        pool.insertClassPath(new ClassClassPath(WOInjectServletContextListener.class));
 
-	try {
-	    String classname = "com.webobjects.foundation._NSUtilities";
+        try {
+            String classname = "com.webobjects.foundation._NSUtilities";
 
-	    CtClass clazz = pool.get(classname);
+            CtClass clazz = pool.get(classname);
 
-	    CtMethod method = clazz.getDeclaredMethod("instantiateObject");
+            CtMethod method = clazz.getDeclaredMethod("instantiateObject");
 
-	    method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObject($1, $2, $3, $4, $5); }");
+            method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObject($1, $2, $3, $4, $5); }");
 
-	    method = clazz.getDeclaredMethod("instantiateObjectWithConstructor");
+            method = clazz.getDeclaredMethod("instantiateObjectWithConstructor");
 
-	    method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObject($1, $2, $3, $4, $5); }");
+            method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObject($1, $2, $3, $4, $5); }");
 
-	    ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-	    loadClass(loader, classname, clazz.toBytecode());
-	} catch (Throwable exception) {
-	    throw new Error("Cannot initialize the application to take advantage of WOInject features.", exception);
-	}
+            loadClass(loader, classname, clazz.toBytecode());
+        } catch (Throwable exception) {
+            throw new Error("Cannot initialize the application to take advantage of WOInject features.", exception);
+        }
 
-	context.setAttribute(WOINJECT_MARKER_ATTRIBUTE, new Object());
+        context.setAttribute(WOINJECT_MARKER_ATTRIBUTE, new Object());
     }
 }

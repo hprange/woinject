@@ -28,12 +28,12 @@ public class StubComponent extends WOComponent {
     @Named("test")
     private String injectedText;
 
-    public StubComponent(WOContext context ) {
-	super(context);
+    public StubComponent(WOContext context) {
+        super(context);
     }
 
     @Override
     public String toString() {
-	return injectedText;
+        return injectedText;
     }
 }

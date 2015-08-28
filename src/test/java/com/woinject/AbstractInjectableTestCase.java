@@ -38,33 +38,33 @@ public abstract class AbstractInjectableTestCase {
      */
     @BeforeClass
     public static void initMainBundle() throws Exception {
-	ClassPool pool = ClassPool.getDefault();
-	CtClass cc = pool.get("com.webobjects.foundation._NSUtilities");
-	CtMethod m = cc.getDeclaredMethod("instantiateObject");
-	m.insertBefore("{ if(com.google.inject.Stage.class == $1) return com.woinject.InjectableApplication#application().injector().getInstance($1); }");
-	cc.toClass();
+        ClassPool pool = ClassPool.getDefault();
+        CtClass cc = pool.get("com.webobjects.foundation._NSUtilities");
+        CtMethod m = cc.getDeclaredMethod("instantiateObject");
+        m.insertBefore("{ if(com.google.inject.Stage.class == $1) return com.woinject.InjectableApplication#application().injector().getInstance($1); }");
+        cc.toClass();
 
-	NSBundle mockBundle = mock(NSBundle.class);
+        NSBundle mockBundle = mock(NSBundle.class);
 
-	when(mockBundle.name()).thenReturn("woinject");
-	when(mockBundle.bundlePathURL()).thenReturn(TestInjectableApplication.class.getClass().getResource("/"));
+        when(mockBundle.name()).thenReturn("woinject");
+        when(mockBundle.bundlePathURL()).thenReturn(TestInjectableApplication.class.getClass().getResource("/"));
 
-	NSBundle._setMainBundle(mockBundle);
+        NSBundle._setMainBundle(mockBundle);
     }
 
     protected StubApplication application;
 
     @Before
     public void setup() throws Exception {
-	application = new StubApplication();
+        application = new StubApplication();
     }
 
     @After
     public void tearDown() {
-	if (application != null) {
-	    application.terminate();
-	}
+        if (application != null) {
+            application.terminate();
+        }
 
-	application = null;
+        application = null;
     }
 }

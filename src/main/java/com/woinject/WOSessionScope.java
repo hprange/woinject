@@ -42,39 +42,39 @@ class WOSessionScope implements Scope {
      * com.google.inject.Provider)
      */
     public <T> Provider<T> scope(final Key<T> key, final Provider<T> creator) {
-	final String name = key.toString();
+        final String name = key.toString();
 
-	return new Provider<T>() {
-	    public T get() {
-		WOSession session = session();
+        return new Provider<T>() {
+            public T get() {
+                WOSession session = session();
 
-		if (session == null) {
-		    throw new OutOfScopeException("Cannot access scoped object. Either the session has not been initialized yet, or it has expired.");
-		}
+                if (session == null) {
+                    throw new OutOfScopeException("Cannot access scoped object. Either the session has not been initialized yet, or it has expired.");
+                }
 
-		synchronized (session) {
-		    Object object = session.objectForKey(name);
+                synchronized (session) {
+                    Object object = session.objectForKey(name);
 
-		    if (object == NSKeyValueCoding.NullValue) {
-			return null;
-		    }
+                    if (object == NSKeyValueCoding.NullValue) {
+                        return null;
+                    }
 
-		    @SuppressWarnings("unchecked")
-		    T t = (T) object;
+                    @SuppressWarnings("unchecked")
+                    T t = (T) object;
 
-		    if (t == null) {
-			t = creator.get();
+                    if (t == null) {
+                        t = creator.get();
 
-			session.setObjectForKey(t != null ? t : NSKeyValueCoding.NullValue, name);
-		    }
+                        session.setObjectForKey(t != null ? t : NSKeyValueCoding.NullValue, name);
+                    }
 
-		    return t;
-		}
-	    }
-	};
+                    return t;
+                }
+            }
+        };
     }
 
     protected WOSession session() {
-	return ERXSession.session();
+        return ERXSession.session();
     }
 }

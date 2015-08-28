@@ -52,41 +52,41 @@ public class WOInject {
      *            the application's command line arguments
      */
     public static void init(String applicationClass, String[] args) {
-	final ClassPool pool = ClassPool.getDefault();
+        final ClassPool pool = ClassPool.getDefault();
 
-	Loader loader = AccessController.doPrivileged(new PrivilegedAction<Loader>() {
-	    public Loader run() {
-		return new Loader(pool);
-	    }
-	});
+        Loader loader = AccessController.doPrivileged(new PrivilegedAction<Loader>() {
+            public Loader run() {
+                return new Loader(pool);
+            }
+        });
 
-	loader.delegateLoadingOf("com.apple.");
+        loader.delegateLoadingOf("com.apple.");
 
-	try {
-	    CtClass clazz = pool.get("com.webobjects.foundation._NSUtilities");
-	    CtMethod method = clazz.getDeclaredMethod("instantiateObject");
+        try {
+            CtClass clazz = pool.get("com.webobjects.foundation._NSUtilities");
+            CtMethod method = clazz.getDeclaredMethod("instantiateObject");
 
-	    method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObject($1, $2, $3, $4, $5); }");
+            method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObject($1, $2, $3, $4, $5); }");
 
-	    method = clazz.getDeclaredMethod("instantiateObjectWithConstructor");
+            method = clazz.getDeclaredMethod("instantiateObjectWithConstructor");
 
-	    method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObject($1, $2, $3, $4, $5); }");
+            method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObject($1, $2, $3, $4, $5); }");
 
-	    Thread.currentThread().setContextClassLoader(loader);
+            Thread.currentThread().setContextClassLoader(loader);
 
-	    Class<?> erxApp = loader.loadClass("er.extensions.appserver.ERXApplication");
+            Class<?> erxApp = loader.loadClass("er.extensions.appserver.ERXApplication");
 
-	    Class<?> app = loader.loadClass(applicationClass);
+            Class<?> app = loader.loadClass(applicationClass);
 
-	    Class<?> injectableApp = loader.loadClass("com.woinject.InjectableApplication");
+            Class<?> injectableApp = loader.loadClass("com.woinject.InjectableApplication");
 
-	    if (!injectableApp.isAssignableFrom(app)) {
-		throw new Error("Cannot initialize the injector. The Application class doesn't extend InjectableApplication.");
-	    }
+            if (!injectableApp.isAssignableFrom(app)) {
+                throw new Error("Cannot initialize the injector. The Application class doesn't extend InjectableApplication.");
+            }
 
-	    erxApp.getDeclaredMethod("main", String[].class, Class.class).invoke(null, args, app);
-	} catch (Throwable exception) {
-	    throw new Error("Cannot initialize the application to take advantage of WOInject features.", exception);
-	}
+            erxApp.getDeclaredMethod("main", String[].class, Class.class).invoke(null, args, app);
+        } catch (Throwable exception) {
+            throw new Error("Cannot initialize the application to take advantage of WOInject features.", exception);
+        }
     }
 }

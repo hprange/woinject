@@ -42,11 +42,11 @@ public class StubEnterpriseObject implements EOEnterpriseObject {
     }
 
     public NSArray<String> allPropertyKeys() {
-	return null;
+        return null;
     }
 
     public NSArray<String> attributeKeys() {
-	return null;
+        return null;
     }
 
     public void awakeFromClientUpdate(EOEditingContext arg0) {
@@ -62,15 +62,15 @@ public class StubEnterpriseObject implements EOEnterpriseObject {
     }
 
     public NSDictionary changesFromSnapshot(NSDictionary<String, Object> arg0) {
-	return null;
+        return null;
     }
 
     public EOClassDescription classDescription() {
-	return null;
+        return null;
     }
 
     public EOClassDescription classDescriptionForDestinationKey(String arg0) {
-	return null;
+        return null;
     }
 
     public void clearFault() {
@@ -82,31 +82,31 @@ public class StubEnterpriseObject implements EOEnterpriseObject {
     }
 
     public int deleteRuleForRelationshipKey(String arg0) {
-	return 0;
+        return 0;
     }
 
     public EOEditingContext editingContext() {
-	return null;
+        return null;
     }
 
     public String entityName() {
-	return null;
+        return null;
     }
 
     public String eoDescription() {
-	return null;
+        return null;
     }
 
     public String eoShallowDescription() {
-	return null;
+        return null;
     }
 
     public EOFaultHandler faultHandler() {
-	return null;
+        return null;
     }
 
     public Object handleQueryWithUnboundKey(String paramString) {
-	return null;
+        return null;
     }
 
     public void handleTakeValueForUnboundKey(Object paramObject, String paramString) {
@@ -114,31 +114,31 @@ public class StubEnterpriseObject implements EOEnterpriseObject {
     }
 
     public String inverseForRelationshipKey(String arg0) {
-	return null;
+        return null;
     }
 
     public Object invokeRemoteMethod(String arg0, Class[] arg1, Object[] arg2) {
-	return null;
+        return null;
     }
 
     public boolean isFault() {
-	return false;
+        return false;
     }
 
     public boolean isReadOnly() {
-	return false;
+        return false;
     }
 
     public boolean isToManyKey(String arg0) {
-	return false;
+        return false;
     }
 
     public Object opaqueState() {
-	return null;
+        return null;
     }
 
     public boolean ownsDestinationObjectsForRelationshipKey(String arg0) {
-	return false;
+        return false;
     }
 
     public void prepareValuesForClient() {
@@ -162,11 +162,11 @@ public class StubEnterpriseObject implements EOEnterpriseObject {
     }
 
     public NSDictionary<String, Object> snapshot() {
-	return null;
+        return null;
     }
 
     public Object storedValueForKey(String arg0) {
-	return null;
+        return null;
     }
 
     public void takeStoredValueForKey(Object arg0, String arg1) {
@@ -188,16 +188,16 @@ public class StubEnterpriseObject implements EOEnterpriseObject {
     }
 
     public NSArray<String> toManyRelationshipKeys() {
-	return null;
+        return null;
     }
 
     public NSArray<String> toOneRelationshipKeys() {
-	return null;
+        return null;
     }
 
     @Override
     public String toString() {
-	return injectedText;
+        return injectedText;
     }
 
     public void turnIntoFault(EOFaultHandler arg0) {
@@ -213,7 +213,7 @@ public class StubEnterpriseObject implements EOEnterpriseObject {
     }
 
     public String userPresentableDescription() {
-	return null;
+        return null;
     }
 
     public void validateClientUpdate() throws ValidationException {
@@ -237,27 +237,27 @@ public class StubEnterpriseObject implements EOEnterpriseObject {
     }
 
     public Object validateTakeValueForKeyPath(Object paramObject, String paramString) throws ValidationException {
-	return null;
+        return null;
     }
 
     public Object validateValueForKey(Object paramObject, String paramString) throws ValidationException {
-	return null;
+        return null;
     }
 
     public Object valueForKey(String paramString) {
-	return null;
+        return null;
     }
 
     public Object valueForKeyPath(String paramString) {
-	return null;
+        return null;
     }
 
     public NSDictionary valuesForKeys(NSArray arg0) {
-	return null;
+        return null;
     }
 
     public NSDictionary valuesForKeysWithMapping(NSDictionary arg0) {
-	return null;
+        return null;
     }
 
     public void willChange() {
@@ -269,6 +269,6 @@ public class StubEnterpriseObject implements EOEnterpriseObject {
     }
 
     public Object willReadRelationship(Object arg0) {
-	return null;
+        return null;
     }
 }

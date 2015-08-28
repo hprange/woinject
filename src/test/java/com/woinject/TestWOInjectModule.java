@@ -73,51 +73,51 @@ public class TestWOInjectModule {
 
     @Test
     public void bindCurrentContextProvider() throws Exception {
-	WOContext result = injector.getInstance(Key.get(WOContext.class, Current.class));
+        WOContext result = injector.getInstance(Key.get(WOContext.class, Current.class));
 
-	assertThat(result, is(mockContext));
+        assertThat(result, is(mockContext));
     }
 
     @Test
     public void bindCurrentERXSessionProvider() throws Exception {
-	ERXSession result = injector.getInstance(Key.get(ERXSession.class, Current.class));
+        ERXSession result = injector.getInstance(Key.get(ERXSession.class, Current.class));
 
-	assertThat(result, is((ERXSession) mockSession));
+        assertThat(result, is((ERXSession) mockSession));
     }
 
     @Test
     public void bindCurrentSessionProvider() throws Exception {
-	StubSession result = injector.getInstance(Key.get(StubSession.class, Current.class));
+        StubSession result = injector.getInstance(Key.get(StubSession.class, Current.class));
 
-	assertThat(result, is(mockSession));
+        assertThat(result, is(mockSession));
     }
 
     @Test
     public void bindCurrentWOSessionProvider() throws Exception {
-	WOSession result = injector.getInstance(Key.get(WOSession.class, Current.class));
+        WOSession result = injector.getInstance(Key.get(WOSession.class, Current.class));
 
-	assertThat(result, is((WOSession) mockSession));
+        assertThat(result, is((WOSession) mockSession));
     }
 
     @Test
     public void bindWORequestScope() throws Exception {
-	Scope scope = scopes.get(WORequestScoped.class);
+        Scope scope = scopes.get(WORequestScoped.class);
 
-	assertThat(scope == WOScopes.REQUEST, is(true));
+        assertThat(scope == WOScopes.REQUEST, is(true));
     }
 
     @Test
     public void bindWOSessionScope() throws Exception {
-	Scope scope = scopes.get(WOSessionScoped.class);
+        Scope scope = scopes.get(WOSessionScoped.class);
 
-	assertThat(scope == WOScopes.SESSION, is(true));
+        assertThat(scope == WOScopes.SESSION, is(true));
     }
 
     @Test(expected = ProvisionException.class)
     public void exceptionIfProvidingNullContext() throws Exception {
-	ERXWOContext.setCurrentContext(null);
+        ERXWOContext.setCurrentContext(null);
 
-	injector.getInstance(Key.get(WOContext.class, Current.class));
+        injector.getInstance(Key.get(WOContext.class, Current.class));
     }
 
     @Test(expected = ProvisionException.class)

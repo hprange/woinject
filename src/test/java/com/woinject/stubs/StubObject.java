@@ -32,6 +32,6 @@ public class StubObject {
 
     @Override
     public String toString() {
-	return injectedText;
+        return injectedText;
     }
 }

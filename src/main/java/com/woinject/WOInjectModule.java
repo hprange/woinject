@@ -36,7 +36,7 @@ public class WOInjectModule extends AbstractModule {
     private final Class<? extends WOSession> sessionClass;
 
     public WOInjectModule(Class<? extends WOSession> sessionClass) {
-	this.sessionClass = sessionClass;
+        this.sessionClass = sessionClass;
     }
 
     /**
@@ -46,18 +46,18 @@ public class WOInjectModule extends AbstractModule {
      */
     @Override
     protected void configure() {
-	bindScope(WORequestScoped.class, WOScopes.REQUEST);
-	bindScope(WOSessionScoped.class, WOScopes.SESSION);
+        bindScope(WORequestScoped.class, WOScopes.REQUEST);
+        bindScope(WOSessionScoped.class, WOScopes.SESSION);
 
-	@SuppressWarnings("unchecked")
-	Class<WOSession> sessionClass = (Class<WOSession>) this.sessionClass;
+        @SuppressWarnings("unchecked")
+        Class<WOSession> sessionClass = (Class<WOSession>) this.sessionClass;
 
-	bind(sessionClass).annotatedWith(Current.class).toProvider(new TypeLiteral<WOSessionProvider<WOSession>>() {
-	});
-	bind(ERXSession.class).annotatedWith(Current.class).toProvider(new TypeLiteral<WOSessionProvider<ERXSession>>() {
-	});
-	bind(WOSession.class).annotatedWith(Current.class).toProvider(new TypeLiteral<WOSessionProvider<WOSession>>() {
-	});
+        bind(sessionClass).annotatedWith(Current.class).toProvider(new TypeLiteral<WOSessionProvider<WOSession>>() {
+        });
+        bind(ERXSession.class).annotatedWith(Current.class).toProvider(new TypeLiteral<WOSessionProvider<ERXSession>>() {
+        });
+        bind(WOSession.class).annotatedWith(Current.class).toProvider(new TypeLiteral<WOSessionProvider<WOSession>>() {
+        });
     }
 
     /**
@@ -69,12 +69,12 @@ public class WOInjectModule extends AbstractModule {
     @Provides
     @Current
     public WOContext provideContext() {
-	WOContext context = ERXWOContext.currentContext();
+        WOContext context = ERXWOContext.currentContext();
 
-	if (context == null) {
-	    throw new WOInjectException("Unable to provide the current context.");
-	}
+        if (context == null) {
+            throw new WOInjectException("Unable to provide the current context.");
+        }
 
-	return context;
+        return context;
     }
 }

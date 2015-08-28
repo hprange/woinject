@@ -29,11 +29,11 @@ public class StubDirectAction extends WODirectAction {
     private String injectedText;
 
     public StubDirectAction(WORequest aRequest) {
-	super(aRequest);
+        super(aRequest);
     }
 
     @Override
     public String toString() {
-	return injectedText;
+        return injectedText;
     }
 }

@@ -30,6 +30,6 @@ public class StubSession extends ERXSession {
 
     @Override
     public String toString() {
-	return injectedText;
+        return injectedText;
     }
 }
