@@ -6,7 +6,7 @@ WOInject
 
 WOInject is an extension of the Google Guice framework created to enable the use of dependency injection with WebObjects applications and frameworks. Dependency injection (DI) is a useful technique for program modularization leading to more testable code. WOInject allows to write better APIs and decoupled code reducing the hurdle of wiring things together.
 
-**Version**: 1.2
+**Version**: 1.2.2
 
 Requirements
 ------------
@@ -33,12 +33,12 @@ Maven users have to add the dependency declaration:
 	<dependency>
 		<groupId>com.woinject</groupId>
 		<artifactId>woinject</artifactId>
-		<version>1.2</version>
+		<version>1.2.2</version>
 	</dependency>
 
 Non Maven users have to:
 
-1. Download the woinject-1.2-bin.zip package.
+1. Download the woinject-1.2.2-bin.zip package.
 2. Add the woinject.jar and the other required libraries to the build path.
 
 Usage
