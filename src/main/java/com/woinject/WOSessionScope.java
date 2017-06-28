@@ -23,8 +23,6 @@ import com.google.inject.Scope;
 import com.webobjects.appserver.WOSession;
 import com.webobjects.foundation.NSKeyValueCoding;
 
-import er.extensions.appserver.ERXSession;
-
 /**
  * WOSession scope.
  * 
@@ -41,10 +39,12 @@ class WOSessionScope implements Scope {
      * @see com.google.inject.Scope#scope(com.google.inject.Key,
      * com.google.inject.Provider)
      */
+    @Override
     public <T> Provider<T> scope(final Key<T> key, final Provider<T> creator) {
         final String name = key.toString();
 
         return new Provider<T>() {
+            @Override
             public T get() {
                 WOSession session = session();
 
@@ -75,6 +75,6 @@ class WOSessionScope implements Scope {
     }
 
     protected WOSession session() {
-        return ERXSession.session();
+        return new WOSessionProvider<WOSession>().getOrNull();
     }
 }

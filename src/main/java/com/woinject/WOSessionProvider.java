@@ -38,8 +38,18 @@ class WOSessionProvider<T extends WOSession> implements Provider<T> {
      * @see com.google.inject.Provider#get()
      */
     @Override
-    @SuppressWarnings("unchecked")
     public T get() {
+        T session = getOrNull();
+
+        if (session == null) {
+            throw new WOInjectException("Unable to provide the current session. Either the session has not been initialized yet, or it has expired.");
+        }
+
+        return session;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected T getOrNull() {
         T session = (T) ERXSession.session();
 
         if (session == null) {
@@ -59,10 +69,6 @@ class WOSessionProvider<T extends WOSession> implements Provider<T> {
                     }
                 }
             }
-        }
-
-        if (session == null) {
-            throw new WOInjectException("Unable to provide the current session. Either the session has not been initialized yet, or it has expired.");
         }
 
         return session;

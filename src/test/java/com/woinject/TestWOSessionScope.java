@@ -19,8 +19,9 @@ package com.woinject;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,8 +32,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.google.inject.Key;
 import com.google.inject.OutOfScopeException;
 import com.google.inject.Provider;
-import com.webobjects.appserver.WOSession;
+import com.webobjects.appserver.WOApplication;
+import com.webobjects.appserver.WOContext;
 import com.webobjects.foundation.NSKeyValueCoding;
+import com.woinject.stubs.StubApplication;
+
+import er.extensions.appserver.ERXSession;
+import er.extensions.appserver.ERXWOContext;
 
 /**
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
@@ -40,7 +46,35 @@ import com.webobjects.foundation.NSKeyValueCoding;
 @RunWith(MockitoJUnitRunner.class)
 public class TestWOSessionScope extends AbstractScopeTestCase<WOSessionScope> {
     @Mock
-    protected WOSession mockSession;
+    private ERXSession mockSession;
+
+    @Mock
+    private WOContext mockContext;
+
+    @Mock
+    private WOApplication application;
+
+    @Before
+    public void setup() {
+        scope = new WOSessionScope();
+
+        ERXSession.setSession(mockSession);
+
+        ERXWOContext.setCurrentContext(mockContext);
+
+        StubApplication.setApplication(application);
+
+        mockKey = Key.get(Object.class);
+
+        when(mockSession.objectForKey(KEY_NAME)).thenReturn(null, mockObject);
+
+        when(mockCreator.get()).thenReturn(mockObject);
+    }
+
+    @After
+    public void tearDown() {
+        ERXSession.setSession(null);
+    }
 
     @Test
     public void createAndSaveObjectOnFirstCall() throws Exception {
@@ -54,7 +88,7 @@ public class TestWOSessionScope extends AbstractScopeTestCase<WOSessionScope> {
 
     @Test
     public void exceptionIfSessionIsNotAvailable() throws Exception {
-        doReturn(null).when(scope).session();
+        ERXSession.setSession(null);
 
         Provider<Object> result = scope.scope(mockKey, mockCreator);
 
@@ -102,16 +136,16 @@ public class TestWOSessionScope extends AbstractScopeTestCase<WOSessionScope> {
         Mockito.verify(mockSession).setObjectForKey(NSKeyValueCoding.NullValue, KEY_NAME);
     }
 
-    @Before
-    public void setup() {
-        scope = Mockito.spy(new WOSessionScope());
+    @Test
+    public void initializeSessionFromSessionID() throws Exception {
+        ERXSession.setSession(null);
 
-        Mockito.doReturn(mockSession).when(scope).session();
+        when(mockContext._requestSessionID()).thenReturn("session-123");
 
-        mockKey = Key.get(Object.class);
+        when(application.restoreSessionWithID("session-123", mockContext)).thenReturn(mockSession);
 
-        Mockito.when(mockSession.objectForKey(KEY_NAME)).thenReturn(null, mockObject);
+        Provider<Object> result = scope.scope(mockKey, mockCreator);
 
-        Mockito.when(mockCreator.get()).thenReturn(mockObject);
+        assertThat(result.get(), is(mockObject));
     }
 }
