@@ -249,9 +249,9 @@
 	</distributionManagement>
 
 	<scm>
-		<connection>scm:git:git@github.com:hprange/woinject.git</connection>
-		<url>scm:git:git@github.com:hprange/woinject.git</url>
-		<developerConnection>scm:git:git@github.com:hprange/woinject.git</developerConnection>
+		<connection>scm:git:https://github.com/hprange/woinject.git</connection>
+		<url>scm:git:https://github.com/hprange/woinject.git</url>
+		<developerConnection>scm:git:https://github.com/hprange/woinject.git</developerConnection>
 	  <tag>HEAD</tag>
   </scm>
 </project>
