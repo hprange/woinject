@@ -41,5 +41,10 @@
     <username>${env.CI_DEPLOY_USERNAME}</username>
     <password>${env.CI_DEPLOY_PASSWORD}</password>
   </server>
+  <server>
+    <id>github</id>
+    <username>${env.GIT_USER_NAME}</username>
+    <password>${env.GIT_USER_PASSWORD}</password>
+  </server>
 </servers>
 </settings>
