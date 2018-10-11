@@ -17,9 +17,6 @@ package com.woinject;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
 
 import org.junit.After;
 import org.junit.Before;
@@ -38,12 +35,6 @@ public abstract class AbstractInjectableTestCase {
      */
     @BeforeClass
     public static void initMainBundle() throws Exception {
-        ClassPool pool = ClassPool.getDefault();
-        CtClass cc = pool.get("com.webobjects.foundation._NSUtilities");
-        CtMethod m = cc.getDeclaredMethod("instantiateObject");
-        m.insertBefore("{ if(com.google.inject.Stage.class == $1) return com.woinject.InjectableApplication#application().injector().getInstance($1); }");
-        cc.toClass();
-
         NSBundle mockBundle = mock(NSBundle.class);
 
         when(mockBundle.name()).thenReturn("woinject");

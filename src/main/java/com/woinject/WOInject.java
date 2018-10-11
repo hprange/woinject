@@ -15,30 +15,32 @@
  */
 package com.woinject;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import static net.bytebuddy.matcher.ElementMatchers.named;
 
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.Loader;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.description.type.TypeDescription;
+import net.bytebuddy.dynamic.ClassFileLocator;
+import net.bytebuddy.implementation.MethodDelegation;
+import net.bytebuddy.pool.TypePool;
 
 /**
- * The <code>WOInject</code> class initializes the application intercepting core
- * methods used by WebObjects classes to create objects.
+ * The <code>WOInject</code> class initializes the application intercepting core methods used by WebObjects classes to
+ * create objects. Since version 1.3, you have to create an application runner to start your application properly. An
+ * application runner is a simple Java class containing only a <code>main</code> method.
  * <p>
- * How to use:
- * 
+ * As an illustration, an application runner should look like this:
+ *
  * <pre>
- * public static void main(String[] argv) {
- *     WOInject.init(&quot;com.company.app.Application&quot;, argv);
+ * public ApplicationRunner {
+ *     public static void main(String[] argv) {
+ *         WOInject.init(&quot;com.company.app.Application&quot;, argv);
+ *     }
  * }
  * </pre>
  * <p>
- * <strong>Note</strong>: to ensure well functioning, do not obtain the
- * <code>Application</code> class name programmatically. No WebObjects classes
- * should be loaded before the WOInject initialization.
- * 
+ * <strong>Note</strong>: to ensure well functioning, do not obtain the <code>Application</code> class name
+ * programmatically. No WebObjects classes must be loaded before the WOInject initialization.
+ *
  * @author <a href="mailto:hprange@gmail.com">Henrique Prange</a>
  * @since 1.0
  */
@@ -52,33 +54,21 @@ public class WOInject {
      *            the application's command line arguments
      */
     public static void init(String applicationClass, String[] args) {
-        final ClassPool pool = ClassPool.getDefault();
+        ClassLoader classloader = ClassLoader.getSystemClassLoader();
+        TypePool typePool = TypePool.Default.of(classloader);
+        TypeDescription nsutilitiesClass = typePool.describe("com.webobjects.foundation._NSUtilities").resolve();
+        TypeDescription instantiationInterceptorClass = typePool.describe("com.webobjects.foundation.InstantiationInterceptor").resolve();
 
-        Loader loader = AccessController.doPrivileged(new PrivilegedAction<Loader>() {
-            public Loader run() {
-                return new Loader(pool);
-            }
-        });
-
-        loader.delegateLoadingOf("com.apple.");
+        new ByteBuddy().redefine(nsutilitiesClass, ClassFileLocator.ForClassLoader.of(classloader))
+                       .method(named("instantiateObject").or(named("instantiateObjectWithConstructor")))
+                       .intercept(MethodDelegation.to(instantiationInterceptorClass))
+                       .make()
+                       .load(classloader);
 
         try {
-            CtClass clazz = pool.get("com.webobjects.foundation._NSUtilities");
-            CtMethod method = clazz.getDeclaredMethod("instantiateObject");
-
-            method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObject($1, $2, $3, $4, $5); }");
-
-            method = clazz.getDeclaredMethod("instantiateObjectWithConstructor");
-
-            method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObject($1, $2, $3, $4, $5); }");
-
-            Thread.currentThread().setContextClassLoader(loader);
-
-            Class<?> erxApp = loader.loadClass("er.extensions.appserver.ERXApplication");
-
-            Class<?> app = loader.loadClass(applicationClass);
-
-            Class<?> injectableApp = loader.loadClass("com.woinject.InjectableApplication");
+            Class<?> erxApp = classloader.loadClass("er.extensions.appserver.ERXApplication");
+            Class<?> injectableApp = classloader.loadClass("com.woinject.InjectableApplication");
+            Class<?> app = classloader.loadClass(applicationClass);
 
             if (!injectableApp.isAssignableFrom(app)) {
                 throw new Error("Cannot initialize the injector. The Application class doesn't extend InjectableApplication.");

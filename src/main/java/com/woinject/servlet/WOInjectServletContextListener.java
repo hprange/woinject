@@ -115,7 +115,7 @@ public class WOInjectServletContextListener implements ServletContextListener {
 
             method = clazz.getDeclaredMethod("instantiateObjectWithConstructor");
 
-            method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObject($1, $2, $3, $4, $5); }");
+            method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObjectWithConstructor($1, $2, $3, $4, $5); }");
 
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
 

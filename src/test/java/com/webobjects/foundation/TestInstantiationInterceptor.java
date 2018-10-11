@@ -110,7 +110,7 @@ public class TestInstantiationInterceptor extends AbstractInjectableTestCase {
     public void bindInterceptorToSpecialObjectsWithConstructorUsingGuice() throws Throwable {
         for (Object[] parameter : parameters) {
             @SuppressWarnings("unchecked")
-            Object result = InstantiationInterceptor.instantiateObject((Constructor<Object>) parameter[3], (Class<Object>) parameter[0], (Object[]) parameter[2], true, false);
+            Object result = InstantiationInterceptor.instantiateObjectWithConstructor((Constructor<Object>) parameter[3], (Class<Object>) parameter[0], (Object[]) parameter[2], true, false);
 
             interceptor.reset();
 
@@ -159,7 +159,7 @@ public class TestInstantiationInterceptor extends AbstractInjectableTestCase {
     public void injectOrdinaryObjectMembersAfterConstructionWithReflectionUsingConstructor() throws Exception {
         Constructor<StubObject> constructor = StubObject.class.getConstructor(new Class<?>[] { String.class, String.class });
 
-        Object result = InstantiationInterceptor.instantiateObject(constructor, StubObject.class, new Object[] { "teste", "teste2" }, true, false);
+        Object result = InstantiationInterceptor.instantiateObjectWithConstructor(constructor, StubObject.class, new Object[] { "teste", "teste2" }, true, false);
 
         assertThat(result, notNullValue());
         assertThat(result, instanceOf(StubObject.class));
@@ -170,7 +170,7 @@ public class TestInstantiationInterceptor extends AbstractInjectableTestCase {
     public void injectSpecialObjectsWithConstructorUsingGuice() throws Exception {
         for (Object[] parameter : parameters) {
             @SuppressWarnings("unchecked")
-            Object result = InstantiationInterceptor.instantiateObject((Constructor<Object>) parameter[3], (Class<Object>) parameter[0], (Object[]) parameter[2], true, false);
+            Object result = InstantiationInterceptor.instantiateObjectWithConstructor((Constructor<Object>) parameter[3], (Class<Object>) parameter[0], (Object[]) parameter[2], true, false);
 
             assertThat(result.toString(), is("expectedText"));
         }
@@ -191,7 +191,7 @@ public class TestInstantiationInterceptor extends AbstractInjectableTestCase {
 
         Constructor<StubEnterpriseObject> constructor = StubEnterpriseObject.class.getConstructor();
 
-        StubEnterpriseObject result = InstantiationInterceptor.instantiateObject(constructor, StubEnterpriseObject.class, null, true, false);
+        StubEnterpriseObject result = InstantiationInterceptor.instantiateObjectWithConstructor(constructor, StubEnterpriseObject.class, null, true, false);
 
         assertThat(result, notNullValue());
         assertThat(result, instanceOf(StubEnterpriseObject.class));
@@ -221,7 +221,7 @@ public class TestInstantiationInterceptor extends AbstractInjectableTestCase {
     public void instantiateSpecialObjectsWithConstructorUsingGuice() throws Exception {
         for (Object[] parameter : parameters) {
             @SuppressWarnings("unchecked")
-            Object result = InstantiationInterceptor.instantiateObject((Constructor<Object>) parameter[3], (Class<Object>) parameter[0], (Object[]) parameter[2], true, false);
+            Object result = InstantiationInterceptor.instantiateObjectWithConstructor((Constructor<Object>) parameter[3], (Class<Object>) parameter[0], (Object[]) parameter[2], true, false);
 
             assertThat(result, notNullValue());
             assertThat(result, instanceOf((Class<?>) parameter[0]));

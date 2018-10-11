@@ -117,7 +117,7 @@ class InstantiationInterceptor {
             return null;
         }
 
-        return instantiateObject(constructor, type, parameters, shouldThrow, shouldLog);
+        return instantiateObjectWithConstructor(constructor, type, parameters, shouldThrow, shouldLog);
     }
 
     /**
@@ -130,12 +130,12 @@ class InstantiationInterceptor {
      * Other types of objects are instantiated by reflection, and their members
      * are injected using the {@link Injector#injectMembers(Object)} method.
      * Those objects are not subject to AOP interceptors.
-     * 
-     * @see _NSUtilities#instantiateObject(Class, Class[], Object[], boolean,
-     *      boolean)
+     *
+     * @see _NSUtilities#instantiateObjectWithConstructor(Constructor, Class,
+     *      Object[], boolean, boolean)
      * @see Injector#injectMembers(Object)
      */
-    public static <T> T instantiateObject(final Constructor<T> constructor, final Class<T> type, final Object[] parameters, boolean shouldThrow, boolean shouldLog) {
+    public static <T> T instantiateObjectWithConstructor(final Constructor<T> constructor, final Class<T> type, final Object[] parameters, boolean shouldThrow, boolean shouldLog) {
         Injector injector = injector();
 
         if (injector == null) {
