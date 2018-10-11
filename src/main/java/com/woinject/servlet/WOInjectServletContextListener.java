@@ -15,18 +15,19 @@
  */
 package com.woinject.servlet;
 
-import java.lang.reflect.Method;
-
-import javassist.ClassClassPath;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
+import static net.bytebuddy.matcher.ElementMatchers.named;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import com.woinject.WOInject;
+
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.description.type.TypeDescription;
+import net.bytebuddy.dynamic.ClassFileLocator;
+import net.bytebuddy.implementation.MethodDelegation;
+import net.bytebuddy.pool.TypePool;
 
 /**
  * <p>
@@ -51,35 +52,12 @@ import com.woinject.WOInject;
 public class WOInjectServletContextListener implements ServletContextListener {
     private static final String WOINJECT_MARKER_ATTRIBUTE = WOInject.class.getName();
 
-    private static Class<?> loadClass(ClassLoader loader, String classname, byte[] bytes) {
-        Class<?> clazz = null;
-
-        try {
-            Class<?> loaderClass = Class.forName("java.lang.ClassLoader");
-
-            Method method = loaderClass.getDeclaredMethod("defineClass", new Class[] { String.class, byte[].class, int.class, int.class });
-
-            method.setAccessible(true);
-
-            try {
-                Object[] args = new Object[] { classname, bytes, 0, bytes.length };
-
-                clazz = (Class<?>) method.invoke(loader, args);
-            } finally {
-                method.setAccessible(false);
-            }
-        } catch (Exception exception) {
-            throw new Error("Error while defining class.", exception);
-        }
-
-        return clazz;
-    }
-
     /**
      * Remove the WOInject marker associated with this context.
      *
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
+    @Override
     public void contextDestroyed(ServletContextEvent event) {
         ServletContext servletContext = event.getServletContext();
 
@@ -92,6 +70,7 @@ public class WOInjectServletContextListener implements ServletContextListener {
      *
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
      */
+    @Override
     public void contextInitialized(ServletContextEvent event) {
         ServletContext context = event.getServletContext();
 
@@ -100,26 +79,17 @@ public class WOInjectServletContextListener implements ServletContextListener {
             return;
         }
 
-        ClassPool pool = ClassPool.getDefault();
-
-        pool.insertClassPath(new ClassClassPath(WOInjectServletContextListener.class));
-
         try {
-            String classname = "com.webobjects.foundation._NSUtilities";
+            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+            TypePool typePool = TypePool.Default.of(classloader);
+            TypeDescription nsutilitiesClass = typePool.describe("com.webobjects.foundation._NSUtilities").resolve();
+            TypeDescription instantiationInterceptorClass = typePool.describe("com.webobjects.foundation.InstantiationInterceptor").resolve();
 
-            CtClass clazz = pool.get(classname);
-
-            CtMethod method = clazz.getDeclaredMethod("instantiateObject");
-
-            method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObject($1, $2, $3, $4, $5); }");
-
-            method = clazz.getDeclaredMethod("instantiateObjectWithConstructor");
-
-            method.insertBefore("{ return com.webobjects.foundation.InstantiationInterceptor.instantiateObjectWithConstructor($1, $2, $3, $4, $5); }");
-
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-
-            loadClass(loader, classname, clazz.toBytecode());
+            new ByteBuddy().redefine(nsutilitiesClass, ClassFileLocator.ForClassLoader.of(classloader))
+                           .method(named("instantiateObject").or(named("instantiateObjectWithConstructor")))
+                           .intercept(MethodDelegation.to(instantiationInterceptorClass))
+                           .make()
+                           .load(classloader);
         } catch (Throwable exception) {
             throw new Error("Cannot initialize the application to take advantage of WOInject features.", exception);
         }
