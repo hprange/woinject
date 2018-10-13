@@ -20,6 +20,7 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.ClassFileLocator;
+import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.pool.TypePool;
 
@@ -63,7 +64,7 @@ public class WOInject {
                        .method(named("instantiateObject").or(named("instantiateObjectWithConstructor")))
                        .intercept(MethodDelegation.to(instantiationInterceptorClass))
                        .make()
-                       .load(classloader);
+                       .load(classloader, ClassLoadingStrategy.Default.INJECTION);
 
         try {
             Class<?> erxApp = classloader.loadClass("er.extensions.appserver.ERXApplication");

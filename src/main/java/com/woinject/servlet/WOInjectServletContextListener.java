@@ -26,6 +26,7 @@ import com.woinject.WOInject;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.ClassFileLocator;
+import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.pool.TypePool;
 
@@ -89,7 +90,7 @@ public class WOInjectServletContextListener implements ServletContextListener {
                            .method(named("instantiateObject").or(named("instantiateObjectWithConstructor")))
                            .intercept(MethodDelegation.to(instantiationInterceptorClass))
                            .make()
-                           .load(classloader);
+                           .load(classloader, ClassLoadingStrategy.Default.INJECTION);
         } catch (Throwable exception) {
             throw new Error("Cannot initialize the application to take advantage of WOInject features.", exception);
         }
