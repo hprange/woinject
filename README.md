@@ -6,7 +6,7 @@ WOInject
 
 WOInject is an extension of the Google Guice framework created to enable the use of dependency injection with WebObjects applications and frameworks. Dependency injection (DI) is a useful technique for program modularization leading to more testable code. WOInject allows to write better APIs and decoupled code reducing the hurdle of wiring things together.
 
-**Version**: 1.2.2
+**Version**: 1.3-SNAPSHOT
 
 Requirements
 ------------
@@ -30,36 +30,51 @@ Installation
 
 Maven users have to add the dependency declaration:
 
-	<dependency>
-		<groupId>com.woinject</groupId>
-		<artifactId>woinject</artifactId>
-		<version>1.2.2</version>
-	</dependency>
+```xml
+<dependency>
+	<groupId>com.woinject</groupId>
+	<artifactId>woinject</artifactId>
+	<version>1.3-SNAPSHOT</version>
+</dependency>
+```
 
 Non Maven users have to:
 
-1. Download the woinject-1.2.2-bin.zip package.
+1. Download the woinject-1.3-SNAPSHOT-bin.zip package.
 2. Add the woinject.jar and the other required libraries to the build path.
 
 Usage
 -----
 
-	package my.app;
+ApplicationRunner.java
 
-	import com.google.inject.Module;
-	import com.woinject.InjectableApplication;
-	import com.woinject.WOInject;
+```java
+package my.app;
 
-	public class Application extends InjectableApplication {
-		public static void main(String[] args) {
-			WOInject.init("my.app.Application", args);
-		}
+import com.woinject.WOInject;
 
-		@Override
-		protected Module[] modules() {
-			return new Module[] { new MyModule() };
-		}
+public class ApplicationRunner {
+	public static void main(String[] args) {
+		WOInject.init("my.app.Application", args);
 	}
+}
+```
+
+Application.java
+
+```java
+package my.app;
+
+import com.google.inject.Module;
+import com.woinject.InjectableApplication;
+
+public class Application extends InjectableApplication {
+	@Override
+	protected Module[] modules() {
+		return new Module[] { new MyModule() };
+	}
+}
+```
 
 About
 -----
