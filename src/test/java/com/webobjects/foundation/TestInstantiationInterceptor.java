@@ -58,33 +58,11 @@ import com.woinject.stubs.StubSession;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class TestInstantiationInterceptor extends AbstractInjectableTestCase {
-    private static class StubInterceptor implements MethodInterceptor {
-        int invocations = 0;
-
-        public Object invoke(MethodInvocation invocation) throws Throwable {
-            invocations++;
-
-            return invocation.proceed();
-        }
-
-        public void reset() {
-            invocations = 0;
-        }
-    }
-
     private static class StubModule extends AbstractModule {
-        private final MethodInterceptor interceptor;
-
-        public StubModule(MethodInterceptor interceptor) {
-            this.interceptor = interceptor;
-        }
-
         @Override
         protected void configure() {
             bind(String.class).annotatedWith(Names.named("test")).toInstance("expectedText");
             bind(StubObjectForBinding.class).toInstance(mock(StubObjectForBinding.class));
-
-            bindInterceptor(Matchers.any(), Matchers.any(), interceptor);
         }
     }
 
@@ -92,8 +70,6 @@ public class TestInstantiationInterceptor extends AbstractInjectableTestCase {
         public StubObjectForBinding() {
         }
     }
-
-    private StubInterceptor interceptor;
 
     @Mock
     private WOContext mockContext;
@@ -105,33 +81,6 @@ public class TestInstantiationInterceptor extends AbstractInjectableTestCase {
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
-
-    @Test
-    public void bindInterceptorToSpecialObjectsWithConstructorUsingGuice() throws Throwable {
-        for (Object[] parameter : parameters) {
-            @SuppressWarnings("unchecked")
-            Object result = InstantiationInterceptor.instantiateObjectWithConstructor((Constructor<Object>) parameter[3], (Class<Object>) parameter[0], (Object[]) parameter[2], true, false);
-
-            interceptor.reset();
-
-            result.toString();
-
-            assertThat(interceptor.invocations, is(1));
-        }
-    }
-
-    @Test
-    public void bindInterceptorToSpecialObjectsWithGuice() throws Throwable {
-        for (Object[] parameter : parameters) {
-            Object result = InstantiationInterceptor.instantiateObject((Class<?>) parameter[0], (Class<?>[]) parameter[1], (Object[]) parameter[2], true, false);
-
-            interceptor.reset();
-
-            result.toString();
-
-            assertThat(interceptor.invocations, is(1));
-        }
-    }
 
     @Test
     public void doNotThrowExceptionIfNotRequired() throws Exception {
@@ -241,16 +190,12 @@ public class TestInstantiationInterceptor extends AbstractInjectableTestCase {
     @Override
     @Before
     public void setup() throws Exception {
-        final StubInterceptor interceptor = new StubInterceptor();
-
-        this.interceptor = interceptor;
-
         application = new StubApplication() {
             @Override
             protected Module[] modules() {
                 List<Module> modules = new ArrayList<Module>(Arrays.asList(super.modules()));
 
-                modules.add(new StubModule(interceptor));
+                modules.add(new StubModule());
 
                 return modules.toArray(new Module[modules.size()]);
             }
